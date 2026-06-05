@@ -889,7 +889,7 @@ async function sendChat() {
     appendBotMsg(reply);
   } catch(e) {
     typing.remove();
-    appendBotMsg('Erro ao conectar com a API. Verifique se sua chave OpenRouter está correta (sk-or-...) e tente novamente.');
+    appendBotMsg(`❌ Erro detalhado: ${e.message || e}\n\nChave usada: ${getKey().slice(0,12)}...`);
   }
 }
 
@@ -940,8 +940,7 @@ async function callAI(prompt) {
       'X-Title': 'ENADEBOT'
     },
     body: JSON.stringify({
-      model: 'google/gemini-2.0-flash-exp:free',
-      messages: [{ role: 'user', content: prompt }],
+      model: 'meta-llama/llama-3.2-3b-instruct:free',
       max_tokens: 1000
     })
   });
@@ -962,13 +961,13 @@ async function callAIChat(messages, systemPrompt) {
       'X-Title': 'ENADEBOT'
     },
     body: JSON.stringify({
-      model: 'google/gemini-2.0-flash-exp:free',
+      model: 'meta-llama/llama-3.2-3b-instruct:free',
       messages: [{ role: 'system', content: systemPrompt }, ...messages],
       max_tokens: 1000
     })
   });
   const data = await res.json();
-  if (data.error) throw new Error(data.error.message);
+  if (data.error) throw new Error(JSON.stringify(data.error));
   return data.choices?.[0]?.message?.content || '';
 }
 
