@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ENADEBOT v2 — Tutor IA para ADS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+<style>
+:root {
+  --bg: #F5F4F0;
+  --surface: #FFFFFF;
+  --surface2: #F0EEE8;
+  --surface3: #E8E5DD;
+  --border: rgba(0,0,0,0.08);
+  --border2: rgba(0,0,0,0.15);
+  --accent: #1A5C3A;
+  --accent-light: #E8F5EE;
+  --accent-mid: #2E7D52;
+  --accent2: #C84B14;
+  --accent2-light: #FDF0EB;
+  --text: #1C1C1A;
+  --text2: #5A5852;
+  --text3: #9A9890;
+  --green: #1A7A3C;
+  --green-bg: #EBF5EE;
+  --green-border: #A8D8B8;
+  --red: #C0392B;
+  --red-bg: #FDECEA;
+  --red-border: #F0B8B2;
+  --yellow: #9B6800;
+  --yellow-bg: #FDF5E0;
+  --font: 'DM Sans', sans-serif;
+  --mono: 'DM Mono', monospace;
+  --radius: 12px;
+  --radius-sm: 7px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.06);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; font-size: 14px; }
+
+.shell { display: flex; height: 100vh; overflow: hidden; }
+
+/* SIDEBAR */
+.sidebar { width: 240px; min-width: 240px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; }
+.sb-logo { padding: 18px 16px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+.sb-logo-icon { width: 34px; height: 34px; background: var(--accent); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #fff; font-weight: 600; flex-shrink: 0; font-family: var(--mono); }
+.sb-logo-name { font-size: 13px; font-weight: 600; color: var(--text); }
+.sb-logo-sub { font-size: 10px; color: var(--text3); font-family: var(--mono); margin-top: 1px; }
+.sb-section { padding: 14px 14px 5px; font-size: 9px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--text3); font-family: var(--mono); }
+.sb-nav-item { display: flex; align-items: center; gap: 9px; padding: 8px 12px; margin: 1px 8px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 400; color: var(--text2); transition: all .12s; border: 1px solid transparent; user-select: none; }
+.sb-nav-item:hover { background: var(--surface2); color: var(--text); }
+.sb-nav-item.active { background: var(--accent-light); color: var(--accent); border-color: rgba(26,92,58,0.15); font-weight: 500; }
+.sb-nav-item i { font-size: 15px; min-width: 16px; }
+.sb-badge { margin-left: auto; font-family: var(--mono); font-size: 9px; background: var(--surface2); padding: 2px 6px; border-radius: 99px; color: var(--text3); border: 1px solid var(--border); }
+.sb-divider { height: 1px; background: var(--border); margin: 6px 12px; }
+.sb-profile { margin-top: auto; padding: 12px 14px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 9px; }
+.sb-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--accent-light); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: var(--accent); flex-shrink: 0; border: 1px solid rgba(26,92,58,0.2); }
+.sb-pname { font-size: 12px; font-weight: 500; }
+.sb-psub { font-size: 10px; color: var(--text3); font-family: var(--mono); }
+
+/* MAIN */
+.main { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+.topbar { padding: 12px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--surface); position: sticky; top: 0; z-index: 10; }
+.topbar-title { font-size: 14px; font-weight: 500; }
+.topbar-sub { font-size: 11px; color: var(--text3); font-family: var(--mono); }
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+.streak-chip { display: flex; align-items: center; gap: 5px; background: var(--yellow-bg); border: 1px solid rgba(155,104,0,0.2); padding: 4px 10px; border-radius: 99px; font-size: 11px; color: var(--yellow); font-family: var(--mono); }
+
+/* SCREEN SYSTEM */
+.screen { display: none; padding: 24px; flex: 1; }
+.screen.active { display: block; animation: fadeUp .2s ease; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
+
+/* HOME */
+.home-hero { background: var(--accent); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 20px; position: relative; overflow: hidden; }
+.home-hero::before { content: ''; position: absolute; top: -40px; right: -30px; width: 180px; height: 180px; background: rgba(255,255,255,0.05); border-radius: 50%; pointer-events: none; }
+.hero-label { font-size: 9px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,0.6); font-family: var(--mono); margin-bottom: 8px; }
+.hero-title { font-size: 22px; font-weight: 600; line-height: 1.25; margin-bottom: 8px; color: #fff; }
+.hero-desc { font-size: 13px; color: rgba(255,255,255,0.72); line-height: 1.6; max-width: 460px; }
+
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+.stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; box-shadow: var(--shadow); }
+.stat-card-val { font-size: 24px; font-weight: 600; font-family: var(--mono); }
+.stat-card-lbl { font-size: 10px; color: var(--text3); margin-top: 3px; text-transform: uppercase; letter-spacing: .07em; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); }
+.card-title { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--text3); margin-bottom: 12px; font-family: var(--mono); }
+.area-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; }
+.area-label { min-width: 130px; color: var(--text2); }
+.area-bar-bg { flex: 1; height: 4px; background: var(--surface3); border-radius: 99px; }
+.area-bar-fill { height: 4px; border-radius: 99px; transition: width .6s cubic-bezier(.4,0,.2,1); }
+.area-pct { min-width: 32px; text-align: right; font-family: var(--mono); font-size: 10px; color: var(--text3); }
+.recent-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.recent-item:last-child { border-bottom: none; padding-bottom: 0; }
+.recent-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.recent-topic { font-size: 10px; color: var(--text3); font-family: var(--mono); }
+.recent-text { font-size: 12px; color: var(--text2); line-height: 1.4; }
+.recent-result { margin-left: auto; font-size: 10px; font-family: var(--mono); }
+.quick-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* QUIZ */
+.topic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-bottom: 16px; }
+.topic-card { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; cursor: pointer; background: var(--surface2); text-align: center; transition: all .15s; user-select: none; }
+.topic-card:hover { border-color: var(--accent-mid); background: var(--accent-light); }
+.topic-card.selected { border-color: var(--accent); background: var(--accent-light); }
+.topic-card i { font-size: 20px; color: var(--accent); display: block; margin-bottom: 7px; }
+.tc-name { font-size: 12px; font-weight: 500; }
+.tc-count { font-size: 9px; color: var(--text3); font-family: var(--mono); margin-top: 2px; }
+.controls-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+.controls-row label { font-size: 12px; color: var(--text2); }
+select { background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius-sm); color: var(--text); font-family: var(--font); font-size: 12px; padding: 6px 10px; cursor: pointer; outline: none; }
+select:focus { border-color: var(--accent); }
+
+/* BUTTONS */
+button { font-family: var(--font); cursor: pointer; border: none; transition: all .15s; }
+.btn-primary { background: var(--accent); color: #fff; font-size: 13px; font-weight: 500; border-radius: var(--radius-sm); padding: 9px 18px; display: inline-flex; align-items: center; gap: 7px; }
+.btn-primary:hover:not(:disabled) { background: var(--accent-mid); transform: translateY(-1px); }
+.btn-primary:disabled { opacity: .35; cursor: not-allowed; transform: none; }
+.btn-ghost { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 12px; padding: 8px 14px; }
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.btn-sm { padding: 6px 12px; font-size: 11px; }
+.btn-icon { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 7px 9px; color: var(--text2); font-size: 14px; display: flex; align-items: center; }
+.btn-icon:hover { border-color: var(--accent); color: var(--accent); }
+
+/* QUESTION */
+.q-shell { max-width: 680px; }
+.q-toprow { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.q-counter { font-size: 10px; font-family: var(--mono); color: var(--text3); }
+.q-tag { font-size: 9px; font-family: var(--mono); color: var(--accent); background: var(--accent-light); border: 1px solid rgba(26,92,58,0.18); padding: 3px 9px; border-radius: 99px; }
+.q-difficulty { font-size: 9px; font-family: var(--mono); padding: 3px 9px; border-radius: 99px; }
+.q-diff-easy { color: var(--green); background: var(--green-bg); border: 1px solid var(--green-border); }
+.q-diff-hard { color: var(--accent2); background: var(--accent2-light); border: 1px solid rgba(200,75,20,0.2); }
+.progress-bg { height: 2px; background: var(--surface3); border-radius: 99px; margin-bottom: 18px; }
+.progress-fill { height: 2px; border-radius: 99px; background: var(--accent); transition: width .35s; }
+.q-text { font-size: 15px; font-weight: 400; line-height: 1.7; margin-bottom: 16px; color: var(--text); }
+.option-btn { width: 100%; text-align: left; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 11px 14px; margin-bottom: 7px; font-size: 13px; color: var(--text); cursor: pointer; display: flex; gap: 12px; align-items: flex-start; transition: all .12s; line-height: 1.5; font-family: var(--font); }
+.option-btn:hover:not(:disabled) { border-color: var(--accent-mid); background: var(--accent-light); color: var(--accent); }
+.option-btn.correct { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
+.option-btn.wrong { background: var(--red-bg); border-color: var(--red-border); color: var(--red); }
+.option-btn.reveal { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
+.opt-letter { font-family: var(--mono); font-size: 10px; min-width: 18px; opacity: .5; padding-top: 2px; }
+
+/* EXPLANATION */
+.exp-box { background: var(--accent-light); border: 1px solid rgba(26,92,58,0.18); border-radius: var(--radius); padding: 14px 18px; margin-top: 12px; font-size: 13px; color: var(--text2); line-height: 1.7; }
+.exp-label { font-size: 9px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 9px; display: flex; align-items: center; gap: 6px; font-family: var(--mono); }
+.loading-text { color: var(--accent); font-style: italic; font-size: 12px; font-family: var(--mono); }
+
+/* RESULT */
+.result-hero { text-align: center; padding: 28px 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+.score-big { font-size: 56px; font-weight: 600; font-family: var(--mono); color: var(--accent); line-height: 1; }
+.result-pct { font-size: 14px; color: var(--text2); margin: 6px 0 14px; }
+.tab-row { display: flex; gap: 3px; background: var(--surface2); padding: 3px; border-radius: var(--radius-sm); border: 1px solid var(--border); margin-bottom: 16px; }
+.tab-btn { flex: 1; background: none; border: none; color: var(--text3); font-size: 12px; padding: 7px; border-radius: 5px; cursor: pointer; font-family: var(--font); transition: all .15s; }
+.tab-btn.active { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+.stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 14px 0; }
+.stat-box { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; text-align: center; }
+.stat-val { font-size: 24px; font-weight: 600; font-family: var(--mono); }
+.stat-lbl { font-size: 9px; color: var(--text3); margin-top: 3px; text-transform: uppercase; letter-spacing: .07em; }
+.badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 99px; font-size: 11px; font-weight: 500; margin-bottom: 12px; }
+.badge-good { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+.badge-ok { background: var(--yellow-bg); color: var(--yellow); border: 1px solid rgba(155,104,0,0.2); }
+.badge-low { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+.review-item { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 8px; }
+
+/* CHAT */
+.chat-layout { display: flex; flex-direction: column; height: calc(100vh - 57px); }
+.chat-messages { flex: 1; overflow-y: auto; padding: 18px 0; display: flex; flex-direction: column; gap: 14px; }
+.msg { display: flex; gap: 10px; max-width: 640px; }
+.msg.user { flex-direction: row-reverse; margin-left: auto; }
+.msg-avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; margin-top: 2px; font-weight: 600; }
+.msg-avatar.bot { background: var(--accent); color: #fff; }
+.msg-avatar.user { background: var(--accent2-light); color: var(--accent2); border: 1px solid rgba(200,75,20,0.2); }
+.msg-bubble { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px; font-size: 13px; line-height: 1.7; color: var(--text); box-shadow: var(--shadow); }
+.msg.user .msg-bubble { background: var(--accent-light); border-color: rgba(26,92,58,0.18); }
+.msg-time { font-size: 9px; color: var(--text3); font-family: var(--mono); margin-top: 4px; }
+.chat-input-area { border-top: 1px solid var(--border); padding: 12px 0; display: flex; gap: 8px; align-items: flex-end; }
+.chat-input { flex: 1; background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius-sm); color: var(--text); font-family: var(--font); font-size: 13px; padding: 9px 12px; outline: none; resize: none; line-height: 1.5; max-height: 120px; box-shadow: var(--shadow); }
+.chat-input:focus { border-color: var(--accent); }
+.chat-send { background: var(--accent); color: #fff; border: none; border-radius: var(--radius-sm); padding: 9px 13px; font-size: 15px; cursor: pointer; display: flex; align-items: center; }
+.chat-send:hover { background: var(--accent-mid); }
+.chat-suggestions { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.chat-pill { background: var(--surface); border: 1px solid var(--border); border-radius: 99px; padding: 5px 11px; font-size: 11px; color: var(--text2); cursor: pointer; transition: all .12s; font-family: var(--font); box-shadow: var(--shadow); }
+.chat-pill:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+/* INTENT ALERT */
+.intent-alert { background: var(--yellow-bg); border: 1px solid rgba(155,104,0,0.2); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 12px; color: var(--yellow); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+
+/* TYPING */
+.typing-dots { display: flex; gap: 4px; padding: 3px 0; }
+.typing-dots span { width: 5px; height: 5px; background: var(--accent); border-radius: 50%; animation: bounce .9s ease-in-out infinite; opacity: .4; }
+.typing-dots span:nth-child(2) { animation-delay: .15s; }
+.typing-dots span:nth-child(3) { animation-delay: .3s; }
+@keyframes bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-5px);opacity:1} }
+
+/* DIFFICULTY BADGE */
+.diff-row { display: flex; align-items: center; gap: 6px; margin-bottom: 12px; }
+
+/* STATS */
+.rec-card { background: var(--accent-light); border: 1px solid rgba(26,92,58,0.15); border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 8px; font-size: 13px; line-height: 1.6; }
+.rec-card strong { color: var(--accent); }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 99px; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-icon">EB</div>
+      <div>
+        <div class="sb-logo-name">ENADEBOT</div>
+        <div class="sb-logo-sub">Tutor IA · ADS Fatec</div>
+      </div>
+    </div>
+    <div class="sb-section">Menu</div>
+    <div class="sb-nav-item active" onclick="navigate('home')"><i class="ti ti-home"></i> Início</div>
+    <div class="sb-nav-item" onclick="navigate('quiz')"><i class="ti ti-help-circle"></i> Praticar questões <span class="sb-badge" id="sb-q-count">25</span></div>
+    <div class="sb-nav-item" onclick="navigate('chat')"><i class="ti ti-message-chatbot"></i> Tutor IA</div>
+    <div class="sb-nav-item" onclick="navigate('stats')"><i class="ti ti-chart-bar"></i> Desempenho</div>
+    <div class="sb-divider"></div>
+    <div class="sb-section">Áreas</div>
+    <div class="sb-nav-item" onclick="quickTopic('Banco de Dados')"><i class="ti ti-database"></i> Banco de Dados</div>
+    <div class="sb-nav-item" onclick="quickTopic('Engenharia de Software')"><i class="ti ti-code"></i> Eng. de Software</div>
+    <div class="sb-nav-item" onclick="quickTopic('Inteligência Artificial')"><i class="ti ti-brain"></i> Inteligência Artificial</div>
+    <div class="sb-nav-item" onclick="quickTopic('Algoritmos')"><i class="ti ti-git-branch"></i> Algoritmos</div>
+    <div class="sb-nav-item" onclick="quickTopic('Redes')"><i class="ti ti-network"></i> Redes</div>
+    <div class="sb-nav-item" onclick="quickTopic('Programação')"><i class="ti ti-terminal-2"></i> Programação</div>
+    <div class="sb-nav-item" onclick="quickTopic('Sistemas Operacionais')"><i class="ti ti-cpu"></i> Sist. Operacionais</div>
+    <div class="sb-profile">
+      <div class="sb-avatar">E</div>
+      <div>
+        <div class="sb-pname">Estudante ADS</div>
+        <div class="sb-psub">ENADE 2024</div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+
+    <div class="topbar" id="topbar">
+      <div>
+        <div class="topbar-title" id="topbar-title">Início</div>
+        <div class="topbar-sub" id="topbar-sub">Bem-vindo ao ENADEBOT</div>
+      </div>
+      <div class="topbar-right">
+        <div class="streak-chip"><i class="ti ti-flame"></i> <span id="streak-count">0</span> dia(s)</div>
+      </div>
+    </div>
+
+    <!-- HOME -->
+    <div class="screen active" id="screen-home">
+      <div class="home-hero">
+        <div class="hero-label">Fatec Ourinhos · ADS</div>
+        <div class="hero-title">Seu tutor inteligente<br>para o ENADE</div>
+        <div class="hero-desc">Pratique questões reais com explicações da IA, acompanhe sua evolução por área e receba trilhas adaptativas baseadas no seu desempenho.</div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-card-val" id="home-total">0</div><div class="stat-card-lbl">Questões respondidas</div></div>
+        <div class="stat-card"><div class="stat-card-val" style="color:var(--green)" id="home-acertos">0%</div><div class="stat-card-lbl">Taxa de acerto</div></div>
+        <div class="stat-card"><div class="stat-card-val" style="color:var(--accent)" id="home-sessions">0</div><div class="stat-card-lbl">Sessões</div></div>
+        <div class="stat-card"><div class="stat-card-val" style="color:var(--yellow)" id="home-streak">0</div><div class="stat-card-lbl">Sequência (dias)</div></div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Desempenho por área</div>
+          <div id="home-area-bars"><div style="font-size:12px;color:var(--text3)">Nenhuma questão respondida ainda.</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Histórico recente</div>
+          <div id="home-recent"><div style="font-size:12px;color:var(--text3)">Nenhuma atividade ainda.</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Acesso rápido</div>
+        <div class="quick-btns">
+          <button class="btn-primary" onclick="navigate('quiz')"><i class="ti ti-player-play"></i> Praticar agora</button>
+          <button class="btn-ghost" onclick="navigate('chat')"><i class="ti ti-message-chatbot"></i> Perguntar ao tutor</button>
+          <button class="btn-ghost" onclick="navigate('stats')"><i class="ti ti-chart-bar"></i> Ver desempenho</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUIZ SELECT -->
+    <div class="screen" id="screen-quiz">
+      <div style="max-width:680px">
+        <div class="card" style="margin-bottom:14px">
+          <div class="card-title">Escolha as áreas de estudo</div>
+          <div class="topic-grid" id="topic-grid"></div>
+          <div class="controls-row">
+            <label>Quantidade:</label>
+            <select id="qtd-select">
+              <option value="5">5 questões</option>
+              <option value="10" selected>10 questões</option>
+              <option value="15">15 questões</option>
+              <option value="20">Todas disponíveis</option>
+            </select>
+            <label>Dificuldade:</label>
+            <select id="diff-select">
+              <option value="all">Todas</option>
+              <option value="easy">Básica</option>
+              <option value="hard">Avançada</option>
+            </select>
+          </div>
+          <button class="btn-primary" id="start-btn" onclick="startQuiz()" disabled>
+            <i class="ti ti-player-play"></i> Iniciar sessão
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUESTION -->
+    <div class="screen" id="screen-question">
+      <div class="q-shell">
+        <div class="q-toprow">
+          <span class="q-counter" id="q-counter"></span>
+          <div style="display:flex;gap:6px;align-items:center">
+            <span class="q-tag" id="q-topic"></span>
+            <span class="q-difficulty" id="q-diff-badge"></span>
+          </div>
+        </div>
+        <div class="progress-bg"><div class="progress-fill" id="q-progress"></div></div>
+        <div class="card">
+          <div class="q-text" id="q-text"></div>
+          <div id="options-area"></div>
+          <div id="exp-area" style="display:none" class="exp-box">
+            <div class="exp-label"><i class="ti ti-sparkles"></i> Explicação do tutor</div>
+            <div id="exp-text"></div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+          <button class="btn-ghost btn-sm" onclick="navigate('quiz')"><i class="ti ti-x"></i> Encerrar</button>
+          <button class="btn-primary" id="next-btn" style="display:none" onclick="nextQ()">
+            <span id="next-label">Próxima questão</span> <i class="ti ti-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="screen" id="screen-result">
+      <div style="max-width:640px">
+        <div class="result-hero">
+          <div id="res-badge"></div>
+          <div class="score-big" id="res-score"></div>
+          <div class="result-pct" id="res-pct"></div>
+          <p style="font-size:13px;color:var(--text2);margin-bottom:16px" id="res-msg"></p>
+          <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+            <button class="btn-primary btn-sm" onclick="navigate('quiz')"><i class="ti ti-refresh"></i> Nova sessão</button>
+            <button class="btn-ghost btn-sm" onclick="startRevision()"><i class="ti ti-book"></i> Revisar erros</button>
+            <button class="btn-ghost btn-sm" onclick="navigate('chat')"><i class="ti ti-message-chatbot"></i> Perguntar ao tutor</button>
+          </div>
+        </div>
+        <div class="tab-row">
+          <button class="tab-btn active" onclick="showTab('tab-summary')">Resumo</button>
+          <button class="tab-btn" onclick="showTab('tab-areas')">Por área</button>
+          <button class="tab-btn" onclick="showTab('tab-review')">Revisão</button>
+        </div>
+        <div id="tab-summary"><div class="stat-grid" id="res-stats"></div></div>
+        <div id="tab-areas" style="display:none"><div class="card"><div class="card-title">Desempenho por área</div><div id="area-bars"></div></div></div>
+        <div id="tab-review" style="display:none"><div id="review-list"></div></div>
+      </div>
+    </div>
+
+    <!-- REVISION -->
+    <div class="screen" id="screen-revision">
+      <div style="max-width:640px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px">
+          <button class="btn-icon" onclick="showScreen('screen-result')"><i class="ti ti-arrow-left"></i></button>
+          <span style="font-size:15px;font-weight:500">Revisão — questões erradas</span>
+        </div>
+        <div id="revision-area"></div>
+      </div>
+    </div>
+
+    <!-- CHAT -->
+    <div class="screen" id="screen-chat" style="padding:24px;display:flex;flex-direction:column;height:calc(100vh - 57px)">
+      <div class="chat-messages" id="chat-messages"></div>
+      <div id="intent-alert-area"></div>
+      <div class="chat-suggestions" id="chat-suggestions">
+        <span class="chat-pill" onclick="sendSuggestion('O que é ACID em banco de dados?')">O que é ACID?</span>
+        <span class="chat-pill" onclick="sendSuggestion('Explique o princípio SOLID')">Princípio SOLID</span>
+        <span class="chat-pill" onclick="sendSuggestion('Como funciona backpropagation?')">Backpropagation</span>
+        <span class="chat-pill" onclick="sendSuggestion('Diferença entre TCP e UDP?')">TCP vs UDP</span>
+        <span class="chat-pill" onclick="sendSuggestion('Dica de estudo para o ENADE em ADS')">Dica de estudo</span>
+      </div>
+      <div class="chat-input-area">
+        <textarea class="chat-input" id="chat-input" rows="1" placeholder="Pergunte ao tutor sobre qualquer tema do ENADE..." onkeydown="chatKey(event)" oninput="autoGrow(this)"></textarea>
+        <button class="chat-send" onclick="sendChat()"><i class="ti ti-send"></i></button>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="screen" id="screen-stats">
+      <div style="max-width:680px">
+        <div class="stats-row" style="grid-template-columns:repeat(3,1fr)">
+          <div class="stat-card"><div class="stat-card-val" id="stats-total">0</div><div class="stat-card-lbl">Total respondidas</div></div>
+          <div class="stat-card"><div class="stat-card-val" style="color:var(--green)" id="stats-pct">0%</div><div class="stat-card-lbl">Taxa de acerto</div></div>
+          <div class="stat-card"><div class="stat-card-val" style="color:var(--accent)" id="stats-sessions">0</div><div class="stat-card-lbl">Sessões</div></div>
+        </div>
+        <div class="card" style="margin-bottom:14px">
+          <div class="card-title">Desempenho por área</div>
+          <div id="stats-area-bars"><div style="font-size:12px;color:var(--text3)">Pratique questões para ver seus dados aqui.</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Recomendação de trilha</div>
+          <div id="stats-recommendation" style="font-size:13px;color:var(--text2);line-height:1.7">Complete ao menos uma sessão para receber uma trilha personalizada.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const ALL_QUESTIONS = [
+  { text:"Em banco de dados relacional, a propriedade ACID garante a confiabilidade das transações. O que representa a letra 'I'?", options:["Integridade dos dados em todo momento","Isolamento: transações concorrentes não interferem entre si","Indexação para acesso eficiente","Imutabilidade dos dados gravados"], correct:1, topic:"Banco de Dados", diff:"easy"},
+  { text:"Qual comando SQL é utilizado para remover uma tabela e toda sua estrutura permanentemente?", options:["DELETE TABLE","REMOVE TABLE","DROP TABLE","TRUNCATE TABLE"], correct:2, topic:"Banco de Dados", diff:"easy"},
+  { text:"No modelo entidade-relacionamento (ER), uma cardinalidade N:M indica que:", options:["Cada registro de A se relaciona com exatamente um de B","Vários registros de A se relacionam com vários de B","Apenas um registro de A pode existir para cada B","A relação é opcional em ambos os lados"], correct:1, topic:"Banco de Dados", diff:"easy"},
+  { text:"O que é uma chave estrangeira (FOREIGN KEY) em bancos de dados relacionais?", options:["Uma chave que identifica unicamente cada linha de uma tabela","Um atributo que referencia a chave primária de outra tabela","Um índice para acelerar buscas","Uma chave criptográfica usada para proteger os dados"], correct:1, topic:"Banco de Dados", diff:"easy"},
+  { text:"Em um banco de dados normalizado, a 3ª Forma Normal (3FN) elimina:", options:["Redundâncias de dados por dependência funcional parcial","Dependências transitivas entre atributos não-chave","Atributos multivalorados","Relações sem chave primária definida"], correct:1, topic:"Banco de Dados", diff:"hard"},
+  { text:"Qual a complexidade de tempo do algoritmo de busca binária em um vetor ordenado com n elementos?", options:["O(n²)","O(n)","O(log n)","O(1)"], correct:2, topic:"Algoritmos", diff:"easy"},
+  { text:"Uma pilha (stack) é uma estrutura de dados que segue o princípio:", options:["FIFO — primeiro a entrar, primeiro a sair","LIFO — último a entrar, primeiro a sair","Acesso aleatório por índice","Ordenação automática dos elementos"], correct:1, topic:"Algoritmos", diff:"easy"},
+  { text:"Qual algoritmo de ordenação possui complexidade O(n log n) no caso médio e pior caso?", options:["Bubble Sort","Selection Sort","Merge Sort","Insertion Sort"], correct:2, topic:"Algoritmos", diff:"easy"},
+  { text:"Em grafos, o algoritmo de Dijkstra é utilizado para:", options:["Encontrar ciclos em grafos direcionados","Calcular o caminho mais curto entre dois vértices","Ordenar os nós por grau de conexão","Verificar se um grafo é bipartido"], correct:1, topic:"Algoritmos", diff:"hard"},
+  { text:"No modelo OSI, em qual camada o protocolo IP opera?", options:["Camada de transporte","Camada de rede","Camada de enlace","Camada de aplicação"], correct:1, topic:"Redes", diff:"easy"},
+  { text:"O protocolo TCP difere do UDP principalmente porque:", options:["TCP é sem conexão e mais rápido","TCP garante entrega confiável e ordenada dos pacotes","UDP usa criptografia nativa","TCP não suporta transmissão em tempo real"], correct:1, topic:"Redes", diff:"easy"},
+  { text:"O endereço IP 192.168.1.0/24 representa uma sub-rede com quantos endereços de host disponíveis?", options:["256","254","255","128"], correct:1, topic:"Redes", diff:"hard"},
+  { text:"O protocolo HTTPS utiliza qual mecanismo para garantir a segurança na comunicação?", options:["Compressão de dados","Criptografia via TLS/SSL","Tunelamento VPN","Autenticação por token JWT"], correct:1, topic:"Redes", diff:"easy"},
+  { text:"O princípio de responsabilidade única (SRP) do SOLID afirma que:", options:["Uma classe deve herdar de apenas uma superclasse","Um módulo deve ter apenas uma razão para mudar","Interfaces devem ser específicas para cada cliente","Classes concretas não devem depender de abstrações"], correct:1, topic:"Engenharia de Software", diff:"easy"},
+  { text:"No padrão de projeto MVC, qual é a responsabilidade da camada 'Controller'?", options:["Armazenar e manipular os dados da aplicação","Renderizar a interface visual ao usuário","Receber as requisições e coordenar Model e View","Gerenciar o banco de dados"], correct:2, topic:"Engenharia de Software", diff:"easy"},
+  { text:"Em metodologias ágeis, o 'Sprint' é definido como:", options:["Um ciclo fixo de desenvolvimento com duração definida","Uma reunião diária de alinhamento da equipe","Um documento de requisitos do produto","Um teste de software realizado ao final do projeto"], correct:0, topic:"Engenharia de Software", diff:"easy"},
+  { text:"O que é refatoração (refactoring) em desenvolvimento de software?", options:["Reescrever um sistema do zero com novas tecnologias","Reestruturar o código existente sem alterar seu comportamento externo","Corrigir bugs encontrados em produção","Adicionar novas funcionalidades ao sistema"], correct:1, topic:"Engenharia de Software", diff:"easy"},
+  { text:"Qual das afirmações abaixo melhor descreve o princípio de Inversão de Dependência (DIP) do SOLID?", options:["Módulos de alto nível devem depender de implementações concretas","Módulos de alto e baixo nível devem depender de abstrações","Uma classe deve ser responsável por apenas uma funcionalidade","Entidades de software devem ser abertas para extensão, fechadas para modificação"], correct:1, topic:"Engenharia de Software", diff:"hard"},
+  { text:"Em machine learning, o fenômeno de overfitting ocorre quando:", options:["O modelo tem baixo desempenho tanto no treino quanto no teste","O modelo aprende demais os dados de treino e generaliza mal","O modelo é treinado com dados insuficientes","A taxa de aprendizado está muito baixa"], correct:1, topic:"Inteligência Artificial", diff:"easy"},
+  { text:"Qual técnica é utilizada para reduzir a dimensionalidade de dados em machine learning?", options:["Gradient Descent","PCA (Análise de Componentes Principais)","Cross-validation","Regularização L2"], correct:1, topic:"Inteligência Artificial", diff:"hard"},
+  { text:"Em redes neurais, a função de ativação ReLU retorna:", options:["Um valor entre 0 e 1","O máximo entre 0 e o valor de entrada","O valor de entrada elevado ao quadrado","O logaritmo natural do valor de entrada"], correct:1, topic:"Inteligência Artificial", diff:"hard"},
+  { text:"O que é validação cruzada (cross-validation) em machine learning?", options:["Uma técnica para criar novos dados sintéticos","Uma técnica para avaliar o modelo dividindo dados em múltiplos subconjuntos","Um método para normalizar os dados de entrada","Um algoritmo para seleção automática de features"], correct:1, topic:"Inteligência Artificial", diff:"hard"},
+  { text:"No paradigma OOP, o conceito de encapsulamento consiste em:", options:["Criar múltiplos objetos de uma mesma classe","Ocultar os detalhes internos e expor apenas o necessário","Herdar atributos e métodos de outra classe","Permitir que um método tenha diferentes comportamentos"], correct:1, topic:"Programação", diff:"easy"},
+  { text:"Qual é a diferença entre uma classe abstrata e uma interface?", options:["Não há diferença prática entre elas","Classe abstrata pode ter implementação; interface define apenas contratos","Interface pode ter atributos de instância; classe abstrata não pode","Classes abstratas não podem ser herdadas"], correct:1, topic:"Programação", diff:"hard"},
+  { text:"Em programação funcional, uma função pura é aquela que:", options:["Pode modificar variáveis globais","Sempre retorna o mesmo resultado para os mesmos parâmetros e sem efeitos colaterais","É definida dentro de outra função","Recebe outra função como parâmetro"], correct:1, topic:"Programação", diff:"easy"},
+  { text:"O que é um deadlock em sistemas operacionais?", options:["Um processo que consume 100% da CPU","Dois ou mais processos aguardando indefinidamente recursos que o outro detém","Um erro de segmentação de memória","Um processo que foi encerrado inesperadamente"], correct:1, topic:"Sistemas Operacionais", diff:"easy"},
+  { text:"A memória virtual em sistemas operacionais permite:", options:["Aumentar fisicamente a capacidade da memória RAM","Executar programas que requerem mais memória do que a RAM disponível","Proteger dados em disco rígido","Acelerar o processamento de cálculos matemáticos"], correct:1, topic:"Sistemas Operacionais", diff:"easy"},
+];
+
+const TOPIC_ICONS = {"Banco de Dados":"ti-database","Algoritmos":"ti-git-branch","Redes":"ti-network","Engenharia de Software":"ti-code","Inteligência Artificial":"ti-brain","Programação":"ti-terminal-2","Sistemas Operacionais":"ti-cpu"};
+const TOPICS = [...new Set(ALL_QUESTIONS.map(q => q.topic))];
+const L = ['A','B','C','D'];
+
+// STATE
+let selectedTopics = [], quizQuestions = [], current = 0, score = 0;
+let answered = false, history = [], revisionQuestions = [];
+let globalHistory = [], globalSessions = 0;
+let chatHistory = [];
+
+// ── DETECÇÃO DE INTENÇÃO ────────────────────────────────────────────────────
+const CHANGE_TOPIC_PATTERNS = [
+  /quero (parar|sair|mudar|trocar|ir para|praticar|treinar)/i,
+  /\b(sair|pare|parar|encerrar|terminar|outro tema|outra área|voltar)\b/i,
+  /me (dê|da|mostre) (uma questão|exercício|pergunta)/i,
+  /vamos (para|ao|à|praticar|treinar)/i,
+  /\b(chega|basta|cansado|enjoado|tédio)\b/i,
+  /não (quero|consigo|entendo) mais/i,
+];
+
+function detectIntent(text) {
+  for (const pat of CHANGE_TOPIC_PATTERNS) {
+    if (pat.test(text)) return 'change_topic';
+  }
+  return 'continue';
+}
+
+function showIntentAlert(text) {
+  const area = document.getElementById('intent-alert-area');
+  area.innerHTML = `<div class="intent-alert">
+    <i class="ti ti-bulb"></i>
+    <span>Parece que você quer mudar de assunto. Quer ir para a seção de questões?</span>
+    <button class="btn-primary btn-sm" style="margin-left:auto;flex-shrink:0" onclick="navigate('quiz');document.getElementById('intent-alert-area').innerHTML=''">Ir para questões</button>
+    <button class="btn-ghost btn-sm" style="flex-shrink:0" onclick="document.getElementById('intent-alert-area').innerHTML=''">Continuar aqui</button>
+  </div>`;
+}
+
+// ── NAVEGAÇÃO ───────────────────────────────────────────────────────────────
+const SCREENS = {
+  home: { id:'screen-home', title:'Início', sub:'Bem-vindo ao ENADEBOT' },
+  quiz: { id:'screen-quiz', title:'Praticar questões', sub:'Selecione áreas e inicie uma sessão' },
+  chat: { id:'screen-chat', title:'Tutor IA', sub:'Pergunte qualquer coisa sobre ADS / ENADE' },
+  stats: { id:'screen-stats', title:'Desempenho', sub:'Acompanhe sua evolução por área' },
+};
+
+function navigate(key) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.sb-nav-item').forEach(n => n.classList.remove('active'));
+  const cfg = SCREENS[key];
+  if (!cfg) return;
+  document.getElementById(cfg.id).classList.add('active');
+  document.getElementById('topbar-title').textContent = cfg.title;
+  document.getElementById('topbar-sub').textContent = cfg.sub;
+  document.querySelectorAll('.sb-nav-item').forEach(n => {
+    if (n.textContent.trim().startsWith(cfg.title.split(' ')[0])) n.classList.add('active');
+  });
+  if (key === 'home') refreshHome();
+  if (key === 'stats') refreshStats();
+  if (key === 'chat' && chatHistory.length === 0) initChat();
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ── TOPIC ATALHO ────────────────────────────────────────────────────────────
+function quickTopic(topic) {
+  navigate('quiz');
+  setTimeout(() => {
+    selectedTopics = [topic];
+    document.querySelectorAll('.topic-card').forEach(el => el.classList.remove('selected'));
+    const el = document.getElementById('tc-' + topic.replace(/ /g,'_'));
+    if (el) el.classList.add('selected');
+    document.getElementById('start-btn').disabled = false;
+  }, 100);
+}
+
+// ── TOPIC GRID ──────────────────────────────────────────────────────────────
+function buildTopicGrid() {
+  document.getElementById('topic-grid').innerHTML = TOPICS.map(t => {
+    const all = ALL_QUESTIONS.filter(q => q.topic === t);
+    return `<div class="topic-card" id="tc-${t.replace(/ /g,'_')}" onclick="toggleTopic('${t}')">
+      <i class="ti ${TOPIC_ICONS[t]||'ti-books'}"></i>
+      <div class="tc-name">${t}</div>
+      <div class="tc-count">${all.length} questões</div>
+    </div>`;
+  }).join('');
+}
+
+function toggleTopic(t) {
+  const idx = selectedTopics.indexOf(t);
+  if (idx === -1) selectedTopics.push(t); else selectedTopics.splice(idx, 1);
+  document.querySelectorAll('.topic-card').forEach(el => el.classList.remove('selected'));
+  selectedTopics.forEach(st => document.getElementById('tc-' + st.replace(/ /g,'_'))?.classList.add('selected'));
+  document.getElementById('start-btn').disabled = selectedTopics.length === 0;
+}
+
+// ── QUIZ ────────────────────────────────────────────────────────────────────
+function shuffle(arr) { return [...arr].sort(() => Math.random() - .5); }
+
+function startQuiz() {
+  const qtd = parseInt(document.getElementById('qtd-select').value);
+  const diffFilter = document.getElementById('diff-select').value;
+  let pool = ALL_QUESTIONS.filter(q => selectedTopics.includes(q.topic));
+  if (diffFilter !== 'all') pool = pool.filter(q => q.diff === diffFilter);
+  quizQuestions = shuffle(pool).slice(0, Math.min(qtd, pool.length));
+  if (quizQuestions.length === 0) { alert('Nenhuma questão encontrada com esses filtros.'); return; }
+  current = 0; score = 0; history = [];
+  globalSessions++;
+  showScreen('screen-question');
+  document.getElementById('topbar-title').textContent = 'Questão';
+  document.getElementById('topbar-sub').textContent = `Sessão ${globalSessions}`;
+  renderQ();
+}
+
+function renderQ() {
+  const q = quizQuestions[current];
+  document.getElementById('q-counter').textContent = `Questão ${current+1} de ${quizQuestions.length}`;
+  document.getElementById('q-topic').textContent = q.topic;
+  const diffBadge = document.getElementById('q-diff-badge');
+  diffBadge.textContent = q.diff === 'easy' ? 'Básica' : 'Avançada';
+  diffBadge.className = 'q-difficulty ' + (q.diff === 'easy' ? 'q-diff-easy' : 'q-diff-hard');
+  document.getElementById('q-progress').style.width = `${(current / quizQuestions.length) * 100}%`;
+  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('exp-area').style.display = 'none';
+  document.getElementById('next-btn').style.display = 'none';
+  document.getElementById('next-label').textContent = current < quizQuestions.length - 1 ? 'Próxima questão' : 'Ver resultado';
+  document.getElementById('options-area').innerHTML = q.options.map((opt, i) =>
+    `<button class="option-btn" id="opt-${i}" onclick="choose(${i})">
+      <span class="opt-letter">${L[i]})</span><span>${opt}</span>
+    </button>`).join('');
+  answered = false;
+}
+
+async function choose(idx) {
+  if (answered) return;
+  answered = true;
+  const q = quizQuestions[current];
+  document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+  const correct = idx === q.correct;
+  document.getElementById(`opt-${idx}`).classList.add(correct ? 'correct' : 'wrong');
+  if (!correct) document.getElementById(`opt-${q.correct}`).classList.add('reveal');
+  if (correct) score++;
+  history.push({ q, chosen: idx, correct });
+  globalHistory.push({ q, chosen: idx, correct, ts: Date.now() });
+
+  const expArea = document.getElementById('exp-area');
+  const expText = document.getElementById('exp-text');
+  expArea.style.display = 'block';
+  expText.innerHTML = '<span class="loading-text">Gerando explicação...</span>';
+
+  const prompt = `Você é um tutor especialista no ENADE para o curso de Análise e Desenvolvimento de Sistemas (ADS). Responda SEMPRE em português, de forma didática e encorajadora.
+
+Questão: "${q.text}"
+Alternativas:
+${q.options.map((o, i) => `${L[i]}) ${o}`).join('\n')}
+Resposta correta: ${L[q.correct]}) ${q.options[q.correct]}
+O estudante ${correct ? 'ACERTOU' : 'ERROU, escolhendo ' + L[idx] + ') ' + q.options[idx]}.
+
+Forneça:
+1. Um parágrafo de explicação geral do conceito (2-3 frases), ${correct ? 'parabenize e reforce' : 'explique o erro e corrija'} de forma didática.
+2. A explicação de CADA alternativa dizendo se está correta ou incorreta e POR QUÊ, em 1 frase cada.
+
+Formato EXATO:
+EXPLICAÇÃO GERAL:
+[texto]
+
+POR QUE CADA ALTERNATIVA:
+A) [correta/incorreta]: [motivo]
+B) [correta/incorreta]: [motivo]
+C) [correta/incorreta]: [motivo]
+D) [correta/incorreta]: [motivo]`;
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1000, messages: [{ role: "user", content: prompt }] })
+    });
+    const data = await res.json();
+    const txt = data.content?.map(c => c.text || '').join('') || '';
+    expText.innerHTML = txt ? formatExplanation(txt, q, idx) : fallbackExplanation(q, idx);
+  } catch(e) {
+    expText.innerHTML = fallbackExplanation(q, idx);
+  }
+  document.getElementById('next-btn').style.display = 'inline-flex';
+}
+
+function formatExplanation(txt, q, chosen) {
+  const geralMatch = txt.match(/EXPLICA[ÇC][ÃA]O GERAL:\s*([\s\S]*?)(?=POR QUE CADA|$)/i);
+  const altMatch = txt.match(/POR QUE CADA ALTERNATIVA:\s*([\s\S]*)$/i);
+  let html = '';
+  if (geralMatch) html += `<div style="margin-bottom:10px;line-height:1.7;color:var(--text)">${geralMatch[1].trim()}</div>`;
+  if (altMatch) {
+    html += `<div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(26,92,58,0.15)">
+      <div style="font-size:9px;font-weight:600;color:var(--accent);margin-bottom:9px;letter-spacing:.1em;text-transform:uppercase;font-family:var(--mono)">Por que cada alternativa?</div>`;
+    const lines = altMatch[1].trim().split('\n').filter(l => l.trim());
+    lines.forEach((line, i) => {
+      const isCorrect = i === q.correct;
+      const color = isCorrect ? 'var(--green)' : 'var(--red)';
+      const clean = line.replace(/^[A-D]\)\s*(correta?|incorreta?):\s*/i, '').trim();
+      html += `<div style="display:flex;gap:9px;margin-bottom:7px;font-size:12px;line-height:1.5">
+        <span style="font-family:var(--mono);font-size:10px;font-weight:600;min-width:18px;color:${color};padding-top:1px">${L[i]})</span>
+        <span style="color:${isCorrect ? 'var(--text)' : 'var(--text3)'}"><span style="color:${color};font-weight:600">${isCorrect ? '✓' : '✗'}</span> ${clean}</span>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+  return html || `<div style="color:var(--text)">${txt}</div>`;
+}
+
+function fallbackExplanation(q, idx) {
+  let html = `<div style="margin-bottom:10px;line-height:1.7;color:var(--text)">A resposta correta é <strong style="color:var(--green)">${L[q.correct]}) ${q.options[q.correct]}</strong>. Revise o tema <em>${q.topic}</em>.</div>`;
+  html += `<div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(26,92,58,0.15)"><div style="font-size:9px;font-weight:600;color:var(--accent);margin-bottom:8px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em">Alternativas:</div>`;
+  q.options.forEach((opt, i) => {
+    const isCorrect = i === q.correct;
+    const color = isCorrect ? 'var(--green)' : 'var(--red)';
+    html += `<div style="display:flex;gap:9px;margin-bottom:7px;font-size:12px;line-height:1.5">
+      <span style="font-family:var(--mono);font-size:10px;font-weight:600;min-width:18px;color:${color}">${L[i]})</span>
+      <span style="color:${isCorrect ? 'var(--text)' : 'var(--text3)'}"><span style="color:${color};font-weight:600">${isCorrect ? '✓' : '✗'}</span> ${opt}</span>
+    </div>`;
+  });
+  html += `</div>`;
+  return html;
+}
+
+function nextQ() {
+  current++;
+  if (current >= quizQuestions.length) { buildResult(); showScreen('screen-result'); return; }
+  renderQ();
+}
+
+// ── RESULTADO ────────────────────────────────────────────────────────────────
+function buildResult() {
+  const pct = Math.round((score / quizQuestions.length) * 100);
+  const badge = pct >= 80 ? '<span class="badge badge-good"><i class="ti ti-trophy"></i> Excelente!</span>'
+               : pct >= 60 ? '<span class="badge badge-ok"><i class="ti ti-thumb-up"></i> Bom trabalho!</span>'
+               : '<span class="badge badge-low"><i class="ti ti-refresh"></i> Continue praticando</span>';
+  document.getElementById('res-badge').innerHTML = badge;
+  document.getElementById('res-score').textContent = `${score}/${quizQuestions.length}`;
+  document.getElementById('res-pct').textContent = `${pct}% de aproveitamento`;
+  document.getElementById('res-msg').textContent = pct >= 80 ? 'Parabéns! Você está bem preparado para o ENADE.' : pct >= 60 ? 'Boa performance! Revise os tópicos com erro.' : 'Continue estudando! Foque nas áreas com mais dificuldade.';
+  document.getElementById('res-stats').innerHTML = `
+    <div class="stat-box"><div class="stat-val" style="color:var(--green)">${score}</div><div class="stat-lbl">Acertos</div></div>
+    <div class="stat-box"><div class="stat-val" style="color:var(--red)">${quizQuestions.length - score}</div><div class="stat-lbl">Erros</div></div>
+    <div class="stat-box"><div class="stat-val">${pct}%</div><div class="stat-lbl">Aproveit.</div></div>`;
+  const areaMap = {};
+  history.forEach(h => {
+    if (!areaMap[h.q.topic]) areaMap[h.q.topic] = { correct:0, total:0 };
+    areaMap[h.q.topic].total++;
+    if (h.correct) areaMap[h.q.topic].correct++;
+  });
+  document.getElementById('area-bars').innerHTML = Object.entries(areaMap).map(([t, d]) => {
+    const p = Math.round((d.correct / d.total) * 100);
+    const c = p >= 80 ? 'var(--green)' : p >= 60 ? 'var(--yellow)' : 'var(--red)';
+    return `<div class="area-row"><span class="area-label">${t}</span><div class="area-bar-bg"><div class="area-bar-fill" style="width:${p}%;background:${c}"></div></div><span class="area-pct">${p}%</span></div>`;
+  }).join('');
+  document.getElementById('review-list').innerHTML = history.map((h, i) => `
+    <div class="review-item">
+      <div style="font-size:12px;font-weight:500;margin-bottom:7px;line-height:1.5">${i+1}. ${h.q.text}</div>
+      <div style="font-size:11px;display:flex;align-items:center;gap:5px;color:${h.correct ? 'var(--green)' : 'var(--red)'};margin-bottom:3px">
+        <i class="ti ${h.correct ? 'ti-check' : 'ti-x'}"></i> Sua resposta: ${L[h.chosen]}) ${h.q.options[h.chosen]}
+      </div>
+      ${!h.correct ? `<div style="font-size:11px;display:flex;align-items:center;gap:5px;color:var(--green);margin-bottom:5px"><i class="ti ti-check"></i> Correta: ${L[h.q.correct]}) ${h.q.options[h.q.correct]}</div>` : ''}
+      <span class="q-tag">${h.q.topic}</span>
+    </div>`).join('');
+  revisionQuestions = history.filter(h => !h.correct).map(h => h.q);
+  document.getElementById('topbar-title').textContent = 'Resultado';
+  document.getElementById('topbar-sub').textContent = `Sessão ${globalSessions} concluída`;
+}
+
+function showTab(id) {
+  ['tab-summary','tab-areas','tab-review'].forEach(t => {
+    document.getElementById(t).style.display = t === id ? 'block' : 'none';
+  });
+  const labels = {'tab-summary':'Resumo','tab-areas':'Por área','tab-review':'Revisão'};
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.textContent.trim() === labels[id]));
+}
+
+function startRevision() {
+  if (revisionQuestions.length === 0) { alert('Parabéns! Nenhum erro para revisar.'); return; }
+  showScreen('screen-revision');
+  document.getElementById('revision-area').innerHTML = revisionQuestions.map((q, qi) => `
+    <div class="card" style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+        <span style="font-size:10px;font-family:var(--mono);color:var(--text3)">Questão ${qi+1} de ${revisionQuestions.length}</span>
+        <span class="q-tag">${q.topic}</span>
+      </div>
+      <div style="font-size:13px;font-weight:400;margin-bottom:10px;line-height:1.6">${q.text}</div>
+      ${q.options.map((opt, i) => `
+        <div style="display:flex;gap:9px;align-items:flex-start;padding:9px 12px;border-radius:7px;margin-bottom:5px;font-size:12px;line-height:1.5;
+          ${i===q.correct ? 'background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)' : 'background:var(--surface2);color:var(--text3);border:1px solid var(--border)'}">
+          <span style="font-family:var(--mono);font-size:10px;min-width:18px">${L[i]})</span>
+          <span>${opt}</span>
+          ${i===q.correct ? '<i class="ti ti-check" style="margin-left:auto;flex-shrink:0"></i>' : ''}
+        </div>`).join('')}
+    </div>`).join('');
+}
+
+// ── HOME REFRESH ─────────────────────────────────────────────────────────────
+function refreshHome() {
+  const total = globalHistory.length;
+  const acertos = globalHistory.filter(h => h.correct).length;
+  const pct = total > 0 ? Math.round((acertos / total) * 100) : 0;
+  document.getElementById('home-total').textContent = total;
+  document.getElementById('home-acertos').textContent = pct + '%';
+  document.getElementById('home-sessions').textContent = globalSessions;
+  document.getElementById('home-streak').textContent = globalSessions > 0 ? 1 : 0;
+  document.getElementById('streak-count').textContent = globalSessions > 0 ? 1 : 0;
+  if (total > 0) {
+    const areaMap = {};
+    globalHistory.forEach(h => {
+      if (!areaMap[h.q.topic]) areaMap[h.q.topic] = { correct:0, total:0 };
+      areaMap[h.q.topic].total++;
+      if (h.correct) areaMap[h.q.topic].correct++;
+    });
+    document.getElementById('home-area-bars').innerHTML = Object.entries(areaMap).map(([t, d]) => {
+      const p = Math.round((d.correct / d.total) * 100);
+      const c = p >= 80 ? 'var(--green)' : p >= 60 ? 'var(--yellow)' : 'var(--red)';
+      return `<div class="area-row"><span class="area-label">${t}</span><div class="area-bar-bg"><div class="area-bar-fill" style="width:${p}%;background:${c}"></div></div><span class="area-pct">${p}%</span></div>`;
+    }).join('');
+    const recent = [...globalHistory].reverse().slice(0, 5);
+    document.getElementById('home-recent').innerHTML = recent.map(h => `
+      <div class="recent-item">
+        <div class="recent-dot" style="background:${h.correct ? 'var(--green)' : 'var(--red)'}"></div>
+        <div>
+          <div class="recent-topic">${h.q.topic}</div>
+          <div class="recent-text">${h.q.text.slice(0, 60)}…</div>
+        </div>
+        <span class="recent-result" style="color:${h.correct ? 'var(--green)' : 'var(--red)'};">${h.correct ? '✓' : '✗'}</span>
+      </div>`).join('');
+  }
+}
+
+// ── STATS REFRESH ─────────────────────────────────────────────────────────────
+function refreshStats() {
+  const total = globalHistory.length;
+  const acertos = globalHistory.filter(h => h.correct).length;
+  const pct = total > 0 ? Math.round((acertos / total) * 100) : 0;
+  document.getElementById('stats-total').textContent = total;
+  document.getElementById('stats-pct').textContent = pct + '%';
+  document.getElementById('stats-sessions').textContent = globalSessions;
+  if (total > 0) {
+    const areaMap = {};
+    globalHistory.forEach(h => {
+      if (!areaMap[h.q.topic]) areaMap[h.q.topic] = { correct:0, total:0 };
+      areaMap[h.q.topic].total++;
+      if (h.correct) areaMap[h.q.topic].correct++;
+    });
+    document.getElementById('stats-area-bars').innerHTML = Object.entries(areaMap).map(([t, d]) => {
+      const p = Math.round((d.correct / d.total) * 100);
+      const c = p >= 80 ? 'var(--green)' : p >= 60 ? 'var(--yellow)' : 'var(--red)';
+      return `<div class="area-row"><span class="area-label">${t}</span><div class="area-bar-bg"><div class="area-bar-fill" style="width:${p}%;background:${c}"></div></div><span class="area-pct">${p}%</span></div>`;
+    }).join('');
+    const sorted = Object.entries(areaMap).sort((a,b) => (a[1].correct/a[1].total) - (b[1].correct/b[1].total));
+    const weakest = sorted[0];
+    const strongest = sorted[sorted.length-1];
+    const weakPct = Math.round((weakest[1].correct/weakest[1].total)*100);
+    const strongPct = Math.round((strongest[1].correct/strongest[1].total)*100);
+    document.getElementById('stats-recommendation').innerHTML = `
+      <div class="rec-card"><i class="ti ti-target"></i> <strong>Foco recomendado:</strong> Você tem o menor desempenho em <strong>${weakest[0]}</strong> (${weakPct}% de acerto). Pratique essa área antes do ENADE.</div>
+      <div class="rec-card"><i class="ti ti-star"></i> <strong>Ponto forte:</strong> <strong>${strongest[0]}</strong> é sua melhor área (${strongPct}%). Continue praticando para manter.</div>
+      <div class="rec-card"><i class="ti ti-route"></i> <strong>Trilha sugerida:</strong> Inicie pelo Banco de Dados e Engenharia de Software — são as áreas com maior peso no ENADE de ADS.</div>`;
+  }
+}
+
+// ── CHAT ──────────────────────────────────────────────────────────────────────
+function initChat() {
+  appendBotMsg(`Olá! Sou o **ENADEBOT**, seu tutor virtual para o ENADE no curso de ADS da Fatec Ourinhos.\n\nPosso te ajudar com:\n- Explicar conceitos de Banco de Dados, Algoritmos, Redes, IA e mais\n- Tirar dúvidas sobre questões que você errou\n- Dar dicas de estudo para o ENADE\n- Criar exercícios extras sobre qualquer tema\n\nO que você quer aprender hoje?`);
+}
+
+function appendBotMsg(text) {
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  div.innerHTML = `
+    <div class="msg-avatar bot">EB</div>
+    <div>
+      <div class="msg-bubble">${text.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>')}</div>
+      <div class="msg-time">${new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</div>
+    </div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+
+function appendUserMsg(text) {
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'msg user';
+  div.innerHTML = `
+    <div class="msg-avatar user">E</div>
+    <div>
+      <div class="msg-bubble">${text}</div>
+      <div class="msg-time" style="text-align:right">${new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</div>
+    </div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function appendTyping() {
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  div.id = 'typing-indicator';
+  div.innerHTML = `<div class="msg-avatar bot">EB</div><div class="msg-bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('chat-suggestions').style.display = 'none';
+
+  // detecção de intenção
+  const intent = detectIntent(text);
+  if (intent === 'change_topic') {
+    showIntentAlert(text);
+  }
+
+  appendUserMsg(text);
+  chatHistory.push({ role: 'user', content: text });
+  const typing = appendTyping();
+
+  const systemPrompt = `Você é o ENADEBOT, um tutor virtual especialista no ENADE para estudantes do curso de Análise e Desenvolvimento de Sistemas (ADS) da Fatec Ourinhos. Responda SEMPRE em português brasileiro, de forma didática, encorajadora e objetiva. Você domina: Banco de Dados, Algoritmos, Redes, Engenharia de Software, Inteligência Artificial, Programação OOP e Funcional, Sistemas Operacionais. Use exemplos práticos quando possível. Seja conciso mas completo. Use ** para negrito ao destacar termos técnicos importantes. Se o usuário pedir para sair, mudar de tema ou praticar questões, oriente-o gentilmente para a seção de questões.`;
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: chatHistory
+      })
+    });
+    const data = await res.json();
+    const reply = data.content?.map(c => c.text || '').join('') || 'Desculpe, não consegui gerar uma resposta. Tente novamente.';
+    chatHistory.push({ role: 'assistant', content: reply });
+    typing.remove();
+    appendBotMsg(reply);
+  } catch(e) {
+    typing.remove();
+    appendBotMsg('Desculpe, ocorreu um erro de conexão. Verifique sua rede e tente novamente.');
+  }
+}
+
+function sendSuggestion(text) {
+  document.getElementById('chat-input').value = text;
+  sendChat();
+}
+
+function chatKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+}
+
+function autoGrow(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+buildTopicGrid();
+refreshHome();
+</script>
+</body>
+</html>
