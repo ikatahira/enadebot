@@ -606,27 +606,21 @@ async function choose(idx) {
   expArea.style.display = 'block';
   expText.innerHTML = '<span class="loading-text">Gerando explicação...</span>';
 
-  const prompt = `Você é um tutor especialista no ENADE para o curso de Análise e Desenvolvimento de Sistemas (ADS). Responda SEMPRE em português, de forma didática e encorajadora.
+  const prompt = `Tutor ENADE ADS. Responda em português, seja conciso.
 
 Questão: "${q.text}"
-Alternativas:
-${q.options.map((o, i) => `${L[i]}) ${o}`).join('\n')}
-Resposta correta: ${L[q.correct]}) ${q.options[q.correct]}
-O estudante ${correct ? 'ACERTOU' : 'ERROU, escolhendo ' + L[idx] + ') ' + q.options[idx]}.
+Correta: ${L[q.correct]}) ${q.options[q.correct]}
+Estudante ${correct ? 'ACERTOU' : 'ERROU (escolheu ' + L[idx] + ') ' + q.options[idx] + ')'}.
 
-Forneça:
-1. Um parágrafo de explicação geral do conceito (2-3 frases), ${correct ? 'parabenize e reforce' : 'explique o erro e corrija'} de forma didática.
-2. A explicação de CADA alternativa dizendo se está correta ou incorreta e POR QUÊ, em 1 frase cada.
-
-Formato EXATO:
+Responda EXATAMENTE neste formato:
 EXPLICAÇÃO GERAL:
-[texto]
+[2 frases explicando o conceito${correct ? ', parabenize' : ', corrija o erro'}]
 
 POR QUE CADA ALTERNATIVA:
-A) [correta/incorreta]: [motivo]
-B) [correta/incorreta]: [motivo]
-C) [correta/incorreta]: [motivo]
-D) [correta/incorreta]: [motivo]`;
+A) [correta/incorreta]: [motivo em 1 frase]
+B) [correta/incorreta]: [motivo em 1 frase]
+C) [correta/incorreta]: [motivo em 1 frase]
+D) [correta/incorreta]: [motivo em 1 frase]`;
 
   try {
     if (!getKey()) { expText.innerHTML = fallbackExplanation(q, idx); document.getElementById('next-btn').style.display = 'inline-flex'; return; }
@@ -879,7 +873,7 @@ async function sendChat() {
   chatHistory.push({ role: 'user', content: text });
   const typing = appendTyping();
 
-  const systemPrompt = `Você é o ENADEBOT, um tutor virtual especialista no ENADE para estudantes do curso de Análise e Desenvolvimento de Sistemas (ADS) da Fatec Ourinhos. Responda SEMPRE em português brasileiro, de forma didática, encorajadora e objetiva. Você domina: Banco de Dados, Algoritmos, Redes, Engenharia de Software, Inteligência Artificial, Programação OOP e Funcional, Sistemas Operacionais. Use exemplos práticos quando possível. Seja conciso mas completo. Use ** para negrito ao destacar termos técnicos importantes. Se o usuário pedir para sair, mudar de tema ou praticar questões, oriente-o gentilmente para a seção de questões.`;
+  const systemPrompt = `Você é o ENADEBOT, tutor do ENADE para ADS (Fatec Ourinhos). Responda em português, de forma didática e concisa. Domínios: BD, Algoritmos, Redes, Eng. Software, IA, Programação, SO. Use ** para negrito em termos técnicos.`;
 
   try {
     if (!getKey()) { typing.remove(); appendBotMsg('Cole sua chave OpenRouter no campo no topo da página para ativar o tutor.'); return; }
@@ -932,14 +926,13 @@ function getKey() {
   return sessionStorage.getItem('enadebot_key') || '';
 }
 
-// openrouter/free roteia automaticamente para qualquer modelo gratuito disponível
-// Fallbacks manuais caso o roteador falhe
+// Modelos rápidos e leves — priorizando baixa latência
 const FREE_MODELS = [
-  'openrouter/free',
-  'deepseek/deepseek-r1:free',
-  'meta-llama/llama-3.3-70b-instruct:free',
   'qwen/qwen3-8b:free',
+  'google/gemma-3-4b-it:free',
+  'meta-llama/llama-3.2-3b-instruct:free',
   'nvidia/llama-3.1-nemotron-nano-8b-v1:free',
+  'openrouter/free',
 ];
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -960,7 +953,7 @@ async function callWithFallback(messages) {
             'HTTP-Referer': 'https://ikatahira.github.io/enadebot/',
             'X-Title': 'ENADEBOT'
           },
-          body: JSON.stringify({ model, messages, max_tokens: 800 })
+          body: JSON.stringify({ model, messages, max_tokens: 500 })
         });
 
         if (res.status === 429) {
