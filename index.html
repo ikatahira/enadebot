@@ -250,8 +250,8 @@ button { font-family: var(--font); cursor: pointer; border: none; transition: al
       </div>
       <div class="topbar-right">
         <div id="api-key-area" style="display:flex;align-items:center;gap:7px">
-          <input id="api-key-input" type="password" placeholder="Cole sua chave OpenRouter (sk-or-...)"
-            style="font-size:12px;font-family:var(--mono);padding:5px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface2);color:var(--text);outline:none;width:270px"
+          <input id="api-key-input" type="password" placeholder="Chave OpenRouter (sk-or-...)"
+            style="font-size:12px;font-family:var(--mono);padding:5px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface2);color:var(--text);outline:none;width:240px"
             oninput="saveKey(this.value)"/>
           <span id="api-key-status" style="font-size:10px;font-family:var(--mono);color:var(--text3)">sem chave</span>
         </div>
@@ -889,7 +889,11 @@ async function sendChat() {
     appendBotMsg(reply);
   } catch(e) {
     typing.remove();
-    appendBotMsg(`❌ Erro detalhado: ${e.message || e}\n\nChave usada: ${getKey().slice(0,12)}...`);
+    const errMsg = (e.message || '').toLowerCase();
+    const friendly = errMsg.includes('sobrecarregado') || errMsg.includes('429') || errMsg.includes('rate')
+      ? '⏳ Os modelos gratuitos estão sobrecarregados agora. Aguarde uns segundos e tente de novo.'
+      : '❌ Erro ao conectar com a IA: ' + (e.message || e);
+    appendBotMsg(friendly);
   }
 }
 
@@ -928,36 +932,72 @@ function getKey() {
   return sessionStorage.getItem('enadebot_key') || '';
 }
 
+// Modelos gratuitos ordenados por confiabilidade — os primeiros são mais estáveis
 const FREE_MODELS = [
   'mistralai/mistral-7b-instruct:free',
-  'qwen/qwen-2-7b-instruct:free',
   'microsoft/phi-3-mini-128k-instruct:free',
+  'qwen/qwen-2-7b-instruct:free',
+  'google/gemma-3-1b-it:free',
   'meta-llama/llama-3.2-3b-instruct:free',
+  'meta-llama/llama-3.2-1b-instruct:free',
+  'deepseek/deepseek-r1-distill-qwen-1.5b:free',
 ];
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 async function callWithFallback(messages) {
   const key = getKey();
   if (!key) return null;
+
   for (const model of FREE_MODELS) {
-    try {
-      const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${key}`,
-          'HTTP-Referer': 'https://ikatahira.github.io/enadebot/',
-          'X-Title': 'ENADEBOT'
-        },
-        body: JSON.stringify({ model, messages, max_tokens: 1000 })
-      });
-      const data = await res.json();
-      if (data.error?.code === 429 || data.error?.code === 503) continue;
-      if (data.error) throw new Error(JSON.stringify(data.error));
-      const text = data.choices?.[0]?.message?.content || '';
-      if (text) return text;
-    } catch(e) { if (e.message.includes('429') || e.message.includes('503')) continue; throw e; }
+    let retries = 2;
+    while (retries-- > 0) {
+      try {
+        const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${key}`,
+            'HTTP-Referer': 'https://ikatahira.github.io/enadebot/',
+            'X-Title': 'ENADEBOT'
+          },
+          body: JSON.stringify({ model, messages, max_tokens: 800 })
+        });
+
+        // Se o servidor retornou 429 com Retry-After, espera e tenta de novo
+        if (res.status === 429) {
+          const retryAfter = parseInt(res.headers.get('Retry-After') || '5', 10);
+          await sleep(Math.min(retryAfter, 8) * 1000);
+          continue;
+        }
+
+        const data = await res.json();
+        const errCode = data.error?.code ?? data.error?.status;
+
+        if (errCode === 429 || errCode === 503 || res.status === 503) {
+          // Espera breve antes de tentar o próximo modelo
+          await sleep(1500);
+          break; // sai do while, tenta próximo modelo
+        }
+
+        if (data.error) throw new Error(JSON.stringify(data.error));
+
+        const text = data.choices?.[0]?.message?.content?.trim() || '';
+        if (text) return text;
+        break;
+
+      } catch(e) {
+        const msg = e.message || '';
+        if (msg.includes('429') || msg.includes('503') || msg.includes('rate')) {
+          await sleep(1500);
+          break; // próximo modelo
+        }
+        throw e;
+      }
+    }
   }
-  throw new Error('Todos os modelos gratuitos estão sobrecarregados no momento. Tente novamente em alguns segundos.');
+
+  throw new Error('Todos os modelos gratuitos estão temporariamente sobrecarregados. Aguarde alguns segundos e tente novamente.');
 }
 
 async function callAI(prompt) {
