@@ -932,15 +932,14 @@ function getKey() {
   return sessionStorage.getItem('enadebot_key') || '';
 }
 
-// Modelos gratuitos ordenados por confiabilidade — os primeiros são mais estáveis
+// openrouter/free roteia automaticamente para qualquer modelo gratuito disponível
+// Fallbacks manuais caso o roteador falhe
 const FREE_MODELS = [
-  'mistralai/mistral-7b-instruct:free',
-  'microsoft/phi-3-mini-128k-instruct:free',
-  'qwen/qwen-2-7b-instruct:free',
-  'google/gemma-3-1b-it:free',
-  'meta-llama/llama-3.2-3b-instruct:free',
-  'meta-llama/llama-3.2-1b-instruct:free',
-  'deepseek/deepseek-r1-distill-qwen-1.5b:free',
+  'openrouter/free',
+  'deepseek/deepseek-r1:free',
+  'meta-llama/llama-3.3-70b-instruct:free',
+  'qwen/qwen3-8b:free',
+  'nvidia/llama-3.1-nemotron-nano-8b-v1:free',
 ];
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -964,7 +963,6 @@ async function callWithFallback(messages) {
           body: JSON.stringify({ model, messages, max_tokens: 800 })
         });
 
-        // Se o servidor retornou 429 com Retry-After, espera e tenta de novo
         if (res.status === 429) {
           const retryAfter = parseInt(res.headers.get('Retry-After') || '5', 10);
           await sleep(Math.min(retryAfter, 8) * 1000);
@@ -974,10 +972,9 @@ async function callWithFallback(messages) {
         const data = await res.json();
         const errCode = data.error?.code ?? data.error?.status;
 
-        if (errCode === 429 || errCode === 503 || res.status === 503) {
-          // Espera breve antes de tentar o próximo modelo
+        if (errCode === 429 || errCode === 503 || errCode === 404 || res.status === 503) {
           await sleep(1500);
-          break; // sai do while, tenta próximo modelo
+          break;
         }
 
         if (data.error) throw new Error(JSON.stringify(data.error));
@@ -988,9 +985,9 @@ async function callWithFallback(messages) {
 
       } catch(e) {
         const msg = e.message || '';
-        if (msg.includes('429') || msg.includes('503') || msg.includes('rate')) {
+        if (msg.includes('429') || msg.includes('503') || msg.includes('404') || msg.includes('rate')) {
           await sleep(1500);
-          break; // próximo modelo
+          break;
         }
         throw e;
       }
