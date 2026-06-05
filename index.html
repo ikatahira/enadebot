@@ -249,6 +249,12 @@ button { font-family: var(--font); cursor: pointer; border: none; transition: al
         <div class="topbar-sub" id="topbar-sub">Bem-vindo ao ENADEBOT</div>
       </div>
       <div class="topbar-right">
+        <div id="api-key-area" style="display:flex;align-items:center;gap:7px">
+          <input id="api-key-input" type="password" placeholder="Cole sua chave API Gemini (AIza...)"
+            style="font-size:12px;font-family:var(--mono);padding:5px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface2);color:var(--text);outline:none;width:260px"
+            oninput="saveKey(this.value)"/>
+          <span id="api-key-status" style="font-size:10px;font-family:var(--mono);color:var(--text3)">sem chave</span>
+        </div>
         <div class="streak-chip"><i class="ti ti-flame"></i> <span id="streak-count">0</span> dia(s)</div>
       </div>
     </div>
@@ -623,13 +629,8 @@ C) [correta/incorreta]: [motivo]
 D) [correta/incorreta]: [motivo]`;
 
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1000, messages: [{ role: "user", content: prompt }] })
-    });
-    const data = await res.json();
-    const txt = data.content?.map(c => c.text || '').join('') || '';
+    if (!getKey()) { expText.innerHTML = fallbackExplanation(q, idx); document.getElementById('next-btn').style.display = 'inline-flex'; return; }
+    const txt = await callGemini(prompt);
     expText.innerHTML = txt ? formatExplanation(txt, q, idx) : fallbackExplanation(q, idx);
   } catch(e) {
     expText.innerHTML = fallbackExplanation(q, idx);
@@ -881,24 +882,14 @@ async function sendChat() {
   const systemPrompt = `Você é o ENADEBOT, um tutor virtual especialista no ENADE para estudantes do curso de Análise e Desenvolvimento de Sistemas (ADS) da Fatec Ourinhos. Responda SEMPRE em português brasileiro, de forma didática, encorajadora e objetiva. Você domina: Banco de Dados, Algoritmos, Redes, Engenharia de Software, Inteligência Artificial, Programação OOP e Funcional, Sistemas Operacionais. Use exemplos práticos quando possível. Seja conciso mas completo. Use ** para negrito ao destacar termos técnicos importantes. Se o usuário pedir para sair, mudar de tema ou praticar questões, oriente-o gentilmente para a seção de questões.`;
 
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1000,
-        system: systemPrompt,
-        messages: chatHistory
-      })
-    });
-    const data = await res.json();
-    const reply = data.content?.map(c => c.text || '').join('') || 'Desculpe, não consegui gerar uma resposta. Tente novamente.';
+    if (!getKey()) { typing.remove(); appendBotMsg('Cole sua chave da API Gemini no campo no topo da página para ativar o tutor.'); return; }
+    const reply = await callGeminiChat(chatHistory, systemPrompt) || 'Desculpe, não consegui gerar uma resposta. Tente novamente.';
     chatHistory.push({ role: 'assistant', content: reply });
     typing.remove();
     appendBotMsg(reply);
   } catch(e) {
     typing.remove();
-    appendBotMsg('Desculpe, ocorreu um erro de conexão. Verifique sua rede e tente novamente.');
+    appendBotMsg('Erro ao conectar com a API. Verifique se sua chave Gemini está correta e tente novamente.');
   }
 }
 
@@ -914,6 +905,69 @@ function chatKey(e) {
 function autoGrow(el) {
   el.style.height = 'auto';
   el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+// ── API KEY (Gemini) ──────────────────────────────────────────────────────────
+function saveKey(val) {
+  const clean = val.trim();
+  sessionStorage.setItem('enadebot_key', clean);
+  const status = document.getElementById('api-key-status');
+  if (clean.length > 10) {
+    status.textContent = '✓ chave salva';
+    status.style.color = 'var(--green)';
+  } else if (clean.length > 0) {
+    status.textContent = '⚠ chave muito curta';
+    status.style.color = 'var(--yellow)';
+  } else {
+    status.textContent = 'sem chave';
+    status.style.color = 'var(--text3)';
+  }
+}
+
+function getKey() {
+  return sessionStorage.getItem('enadebot_key') || '';
+}
+
+async function callGemini(prompt) {
+  const key = getKey();
+  if (!key) return null;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { maxOutputTokens: 1000, temperature: 0.4 }
+    })
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+}
+
+async function callGeminiChat(messages, systemPrompt) {
+  const key = getKey();
+  if (!key) return null;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`;
+  // monta histórico no formato Gemini
+  const contents = [];
+  // system instruction como primeiro turno user
+  contents.push({ role: 'user', parts: [{ text: systemPrompt }] });
+  contents.push({ role: 'model', parts: [{ text: 'Entendido. Sou o ENADEBOT e estou pronto para ajudar.' }] });
+  for (const m of messages) {
+    contents.push({ role: m.role === 'user' ? 'user' : 'model', parts: [{ text: m.content }] });
+  }
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents,
+      generationConfig: { maxOutputTokens: 1000, temperature: 0.5 }
+    })
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
