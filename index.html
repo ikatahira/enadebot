@@ -928,47 +928,44 @@ function getKey() {
   return sessionStorage.getItem('enadebot_key') || '';
 }
 
-async function callAI(prompt) {
+const FREE_MODELS = [
+  'mistralai/mistral-7b-instruct:free',
+  'qwen/qwen-2-7b-instruct:free',
+  'microsoft/phi-3-mini-128k-instruct:free',
+  'meta-llama/llama-3.2-3b-instruct:free',
+];
+
+async function callWithFallback(messages) {
   const key = getKey();
   if (!key) return null;
-  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${key}`,
-      'HTTP-Referer': 'https://ikatahira.github.io/enadebot/',
-      'X-Title': 'ENADEBOT'
-    },
-    body: JSON.stringify({
-      model: 'meta-llama/llama-3.2-3b-instruct:free',
-      max_tokens: 1000
-    })
-  });
-  const data = await res.json();
-  if (data.error) throw new Error(data.error.message);
-  return data.choices?.[0]?.message?.content || '';
+  for (const model of FREE_MODELS) {
+    try {
+      const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${key}`,
+          'HTTP-Referer': 'https://ikatahira.github.io/enadebot/',
+          'X-Title': 'ENADEBOT'
+        },
+        body: JSON.stringify({ model, messages, max_tokens: 1000 })
+      });
+      const data = await res.json();
+      if (data.error?.code === 429 || data.error?.code === 503) continue;
+      if (data.error) throw new Error(JSON.stringify(data.error));
+      const text = data.choices?.[0]?.message?.content || '';
+      if (text) return text;
+    } catch(e) { if (e.message.includes('429') || e.message.includes('503')) continue; throw e; }
+  }
+  throw new Error('Todos os modelos gratuitos estão sobrecarregados no momento. Tente novamente em alguns segundos.');
+}
+
+async function callAI(prompt) {
+  return callWithFallback([{ role: 'user', content: prompt }]);
 }
 
 async function callAIChat(messages, systemPrompt) {
-  const key = getKey();
-  if (!key) return null;
-  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${key}`,
-      'HTTP-Referer': 'https://ikatahira.github.io/enadebot/',
-      'X-Title': 'ENADEBOT'
-    },
-    body: JSON.stringify({
-      model: 'meta-llama/llama-3.2-3b-instruct:free',
-      messages: [{ role: 'system', content: systemPrompt }, ...messages],
-      max_tokens: 1000
-    })
-  });
-  const data = await res.json();
-  if (data.error) throw new Error(JSON.stringify(data.error));
-  return data.choices?.[0]?.message?.content || '';
+  return callWithFallback([{ role: 'system', content: systemPrompt }, ...messages]);
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
