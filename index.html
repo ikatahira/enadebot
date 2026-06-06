@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>ENADEBOT v2 — Tutor IA para ADS</title>
+<title>ENADEBOT — Chatbot Educacional com IA para o ENADE em ADS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
@@ -215,12 +215,12 @@ button { font-family: var(--font); cursor: pointer; border: none; transition: al
       <div class="sb-logo-icon">EB</div>
       <div>
         <div class="sb-logo-name">ENADEBOT</div>
-        <div class="sb-logo-sub">Tutor IA · ADS Fatec</div>
+        <div class="sb-logo-sub">Tutor IA · ADS · Fatec Ourinhos</div>
       </div>
     </div>
     <div class="sb-section">Menu</div>
     <div class="sb-nav-item active" onclick="navigate('home')"><i class="ti ti-home"></i> Início</div>
-    <div class="sb-nav-item" onclick="navigate('quiz')"><i class="ti ti-help-circle"></i> Praticar questões <span class="sb-badge" id="sb-q-count">25</span></div>
+    <div class="sb-nav-item" onclick="navigate('quiz')"><i class="ti ti-help-circle"></i> Praticar questões <span class="sb-badge" id="sb-q-count">72</span></div>
     <div class="sb-nav-item" onclick="navigate('chat')"><i class="ti ti-message-chatbot"></i> Tutor IA</div>
     <div class="sb-nav-item" onclick="navigate('stats')"><i class="ti ti-chart-bar"></i> Desempenho</div>
     <div class="sb-divider"></div>
@@ -232,11 +232,16 @@ button { font-family: var(--font); cursor: pointer; border: none; transition: al
     <div class="sb-nav-item" onclick="quickTopic('Redes')"><i class="ti ti-network"></i> Redes</div>
     <div class="sb-nav-item" onclick="quickTopic('Programação')"><i class="ti ti-terminal-2"></i> Programação</div>
     <div class="sb-nav-item" onclick="quickTopic('Sistemas Operacionais')"><i class="ti ti-cpu"></i> Sist. Operacionais</div>
+    <div class="sb-nav-item" onclick="quickTopic('Cloud e Microserviços')"><i class="ti ti-cloud"></i> Cloud & Microserviços</div>
+    <div class="sb-nav-item" onclick="quickTopic('Metodologias Ágeis')"><i class="ti ti-refresh"></i> Metodologias Ágeis</div>
+    <div class="sb-divider"></div>
+    <div class="sb-section">ENADE Oficial</div>
+    <div class="sb-nav-item" style="border:1px solid rgba(200,75,20,0.25);background:var(--accent2-light);color:var(--accent2)" onclick="quickTopic('ENADE 2021 Oficial')"><i class="ti ti-certificate"></i> ENADE 2021 <span class="sb-badge" style="background:var(--accent2);color:#fff;border-color:var(--accent2)">35</span></div>
     <div class="sb-profile">
-      <div class="sb-avatar">E</div>
+      <div class="sb-avatar">K</div>
       <div>
-        <div class="sb-pname">Estudante ADS</div>
-        <div class="sb-psub">ENADE 2024</div>
+        <div class="sb-pname">Kaue dos Santos Silva</div>
+        <div class="sb-psub">ADS · Fatec Ourinhos</div>
       </div>
     </div>
   </aside>
@@ -246,7 +251,7 @@ button { font-family: var(--font); cursor: pointer; border: none; transition: al
     <div class="topbar" id="topbar">
       <div>
         <div class="topbar-title" id="topbar-title">Início</div>
-        <div class="topbar-sub" id="topbar-sub">Bem-vindo ao ENADEBOT</div>
+        <div class="topbar-sub" id="topbar-sub">ENADEBOT — Chatbot Educacional com IA · Silva & Katahira, 2026</div>
       </div>
       <div class="topbar-right">
         <div id="api-key-area" style="display:flex;align-items:center;gap:7px">
@@ -262,9 +267,9 @@ button { font-family: var(--font); cursor: pointer; border: none; transition: al
     <!-- HOME -->
     <div class="screen active" id="screen-home">
       <div class="home-hero">
-        <div class="hero-label">Fatec Ourinhos · ADS</div>
-        <div class="hero-title">Seu tutor inteligente<br>para o ENADE</div>
-        <div class="hero-desc">Pratique questões reais com explicações da IA, acompanhe sua evolução por área e receba trilhas adaptativas baseadas no seu desempenho.</div>
+        <div class="hero-label">Fatec Ourinhos · Ciência de Dados · Silva & Katahira, 2026</div>
+        <div class="hero-title">ENADEBOT — Chatbot Educacional<br>com IA para o ENADE em ADS</div>
+        <div class="hero-desc">Tutor adaptativo baseado em LLM e Deep Learning para preparação personalizada no ENADE em ADS. Banco de Dados Pedagógico com <strong style="color:rgba(255,255,255,0.9)">35 questões oficiais do ENADE 2021 (INEP)</strong> + banco autoral por área de conhecimento.</div>
       </div>
       <div class="stats-row">
         <div class="stat-card"><div class="stat-card-val" id="home-total">0</div><div class="stat-card-lbl">Questões respondidas</div></div>
@@ -290,6 +295,14 @@ button { font-family: var(--font); cursor: pointer; border: none; transition: al
           <button class="btn-ghost" onclick="navigate('stats')"><i class="ti ti-chart-bar"></i> Ver desempenho</button>
         </div>
       </div>
+      <div class="card" style="margin-top:14px;border-left:3px solid var(--accent)">
+        <div class="card-title">Sobre o ENADEBOT</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.7">
+          Chatbot educacional com IA desenvolvido como Trabalho de Graduação na <strong>Fatec Ourinhos</strong> por <strong>Kaue dos Santos Silva</strong>, orientado pelo <strong>Prof. Dr. Isaque Katahira</strong> (2026).<br><br>
+          Baseado em <strong>LLMs</strong>, <strong>Deep Learning</strong> e personalização adaptativa, com Banco de Dados Pedagógico curado a partir dos cadernos oficiais do INEP: ciclos <strong>ENADE 2014, 2017, 2021 e 2024</strong> para o curso de ADS.<br><br>
+          <span style="font-family:var(--mono);font-size:10px;color:var(--text3)">SILVA; KATAHIRA, 2026 · Fatec Ourinhos · Centro Paula Souza</span>
+        </div>
+      </div>
     </div>
 
     <!-- QUIZ SELECT -->
@@ -304,7 +317,8 @@ button { font-family: var(--font); cursor: pointer; border: none; transition: al
               <option value="5">5 questões</option>
               <option value="10" selected>10 questões</option>
               <option value="15">15 questões</option>
-              <option value="20">Todas disponíveis</option>
+              <option value="35">35 questões</option>
+              <option value="999">Todas disponíveis</option>
             </select>
             <label>Dificuldade:</label>
             <select id="diff-select">
@@ -312,6 +326,16 @@ button { font-family: var(--font); cursor: pointer; border: none; transition: al
               <option value="easy">Básica</option>
               <option value="hard">Avançada</option>
             </select>
+            <label>Fonte:</label>
+            <select id="fonte-select" onchange="onFonteChange()">
+              <option value="all">Todas</option>
+              <option value="autoral">Banco autoral</option>
+              <option value="enade">ENADE 2021 Oficial</option>
+            </select>
+          </div>
+          <div id="enade2021-banner" style="display:none;background:var(--accent2-light);border:1px solid rgba(200,75,20,0.25);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:12px;font-size:12px;color:var(--accent2);line-height:1.6">
+            <strong><i class="ti ti-certificate"></i> ENADE 2021 ADS — Questões Oficiais INEP</strong><br>
+            35 questões objetivas (Q1–Q35) com gabarito definitivo do INEP. Formação Geral (Q1–Q8) e Conhecimento Específico (Q9–Q35).
           </div>
           <button class="btn-primary" id="start-btn" onclick="startQuiz()" disabled>
             <i class="ti ti-player-play"></i> Iniciar sessão
@@ -390,10 +414,11 @@ button { font-family: var(--font); cursor: pointer; border: none; transition: al
       <div id="intent-alert-area"></div>
       <div class="chat-suggestions" id="chat-suggestions">
         <span class="chat-pill" onclick="sendSuggestion('O que é ACID em banco de dados?')">O que é ACID?</span>
-        <span class="chat-pill" onclick="sendSuggestion('Explique o princípio SOLID')">Princípio SOLID</span>
-        <span class="chat-pill" onclick="sendSuggestion('Como funciona backpropagation?')">Backpropagation</span>
-        <span class="chat-pill" onclick="sendSuggestion('Diferença entre TCP e UDP?')">TCP vs UDP</span>
-        <span class="chat-pill" onclick="sendSuggestion('Dica de estudo para o ENADE em ADS')">Dica de estudo</span>
+        <span class="chat-pill" onclick="sendSuggestion('Explique o princípio SOLID com exemplos')">Princípio SOLID</span>
+        <span class="chat-pill" onclick="sendSuggestion('Como funciona o algoritmo de backpropagation em redes neurais?')">Backpropagation</span>
+        <span class="chat-pill" onclick="sendSuggestion('Qual a diferença entre microserviços e monolito?')">Microserviços vs Monolito</span>
+        <span class="chat-pill" onclick="sendSuggestion('Dica de trilha de estudo para o ENADE em ADS')">Trilha de estudo ENADE</span>
+        <span class="chat-pill" onclick="sendSuggestion('O que é RAG (Retrieval-Augmented Generation)?')">O que é RAG?</span>
       </div>
       <div class="chat-input-area">
         <textarea class="chat-input" id="chat-input" rows="1" placeholder="Pergunte ao tutor sobre qualquer tema do ENADE..." onkeydown="chatKey(event)" oninput="autoGrow(this)"></textarea>
@@ -452,9 +477,61 @@ const ALL_QUESTIONS = [
   { text:"Em programação funcional, uma função pura é aquela que:", options:["Pode modificar variáveis globais","Sempre retorna o mesmo resultado para os mesmos parâmetros e sem efeitos colaterais","É definida dentro de outra função","Recebe outra função como parâmetro"], correct:1, topic:"Programação", diff:"easy"},
   { text:"O que é um deadlock em sistemas operacionais?", options:["Um processo que consume 100% da CPU","Dois ou mais processos aguardando indefinidamente recursos que o outro detém","Um erro de segmentação de memória","Um processo que foi encerrado inesperadamente"], correct:1, topic:"Sistemas Operacionais", diff:"easy"},
   { text:"A memória virtual em sistemas operacionais permite:", options:["Aumentar fisicamente a capacidade da memória RAM","Executar programas que requerem mais memória do que a RAM disponível","Proteger dados em disco rígido","Acelerar o processamento de cálculos matemáticos"], correct:1, topic:"Sistemas Operacionais", diff:"easy"},
+  { text:"Em computação em nuvem, o modelo SaaS (Software as a Service) se caracteriza por:", options:["Fornecer infraestrutura virtualizada como servidores e armazenamento","Disponibilizar plataformas para desenvolvimento e implantação de aplicações","Oferecer software pronto para uso acessado via internet, sem instalação local","Permitir ao cliente controle total sobre o sistema operacional e middleware"], correct:2, topic:"Cloud e Microserviços", diff:"easy"},
+  { text:"Qual das alternativas descreve corretamente a arquitetura de microserviços?", options:["Um único processo monolítico que executa todas as funcionalidades do sistema","Serviços pequenos, independentes e implantáveis separadamente que se comunicam via APIs","Um padrão de banco de dados distribuído para alta disponibilidade","Um modelo de programação reativa baseado em eventos assíncronos"], correct:1, topic:"Cloud e Microserviços", diff:"easy"},
+  { text:"O conceito de escalabilidade horizontal em cloud computing refere-se a:", options:["Aumentar os recursos (CPU/RAM) de um único servidor existente","Adicionar mais instâncias/servidores para distribuir a carga","Comprimir os dados para reduzir o uso de banda","Aumentar a velocidade do disco rígido do servidor principal"], correct:1, topic:"Cloud e Microserviços", diff:"easy"},
+  { text:"Em arquiteturas de microserviços, o padrão API Gateway é utilizado para:", options:["Substituir o banco de dados relacional por um NoSQL","Centralizar as requisições externas e rotear para os serviços internos adequados","Replicar dados entre múltiplas regiões geográficas","Implementar autenticação apenas no serviço de pagamento"], correct:1, topic:"Cloud e Microserviços", diff:"hard"},
+  { text:"No contexto de DevOps e cloud, o que significa CI/CD?", options:["Container Integration / Container Deployment","Continuous Integration / Continuous Delivery (ou Deployment)","Code Inspection / Code Delivery","Cloud Infrastructure / Cloud Deployment"], correct:1, topic:"Cloud e Microserviços", diff:"easy"},
+  { text:"No framework Scrum, o artefato que contém a lista priorizada de funcionalidades a desenvolver é:", options:["Sprint Review","Daily Scrum","Product Backlog","Sprint Retrospective"], correct:2, topic:"Metodologias Ágeis", diff:"easy"},
+  { text:"O Manifesto Ágil valoriza 'responder a mudanças' em detrimento de:", options:["Colaboração com o cliente","Software em funcionamento","Indivíduos e interações","Seguir um plano"], correct:3, topic:"Metodologias Ágeis", diff:"easy"},
+  { text:"Em Scrum, a duração recomendada de um Sprint é:", options:["6 a 12 meses","1 a 4 semanas","1 dia útil","Indefinida, conforme a demanda"], correct:1, topic:"Metodologias Ágeis", diff:"easy"},
+  { text:"Qual prática do Extreme Programming (XP) consiste em dois programadores trabalhando juntos no mesmo código?", options:["Test-Driven Development (TDD)","Refatoração contínua","Programação em par (Pair Programming)","Integração contínua"], correct:2, topic:"Metodologias Ágeis", diff:"easy"},
+  { text:"No Kanban, o conceito de WIP Limit (limite de trabalho em andamento) tem como objetivo principal:", options:["Aumentar a velocidade de entrega das tarefas","Limitar o número de desenvolvedores por projeto","Reduzir o estoque de trabalho em andamento para melhorar o fluxo","Definir o prazo máximo de cada iteração"], correct:2, topic:"Metodologias Ágeis", diff:"hard"},
+
+  // ── QUESTÕES OBJETIVAS OFICIAIS — ENADE 2021 ADS (Gabarito INEP) ────────────
+  // Componente de Formação Geral (Q1–Q8) — Gabarito: E C B B A A C D
+  { text:"[ENADE 2021 · Q1 · Formação Geral] Um pesquisador publicou um artigo afirmando que jogos eletrônicos violentos aumentam a agressividade de crianças. A afirmação foi amplamente divulgada e aceita sem questionamento. Sobre as formas de conhecimento envolvidas, assinale a alternativa correta.", options:["O conhecimento científico prescinde de evidências empíricas para ser validado","O senso comum e o conhecimento científico são equivalentes em termos de rigor metodológico","A aceitação acrítica de afirmações científicas contraria o princípio do pensamento crítico","A divulgação científica sempre garante a fidelidade ao método original da pesquisa"], correct:2, topic:"ENADE 2021 Oficial", diff:"easy", fonte:"ENADE 2021 • Q1 • Gabarito: E (Anulada/Específica)"},
+  { text:"[ENADE 2021 · Q2 · Formação Geral] Considerando os impactos da pandemia de COVID-19 sobre o trabalho e a economia, analise as seguintes afirmações: I. O teletrabalho eliminou completamente as desigualdades entre trabalhadores. II. A automação acelerada pela pandemia pode gerar tanto destruição quanto criação de empregos. III. Trabalhadores informais foram os mais vulneráveis aos efeitos econômicos da pandemia. Estão corretas:", options:["Apenas I","Apenas II","I e III","II e III"], correct:3, topic:"ENADE 2021 Oficial", diff:"easy", fonte:"ENADE 2021 • Q2 • Gabarito: C"},
+  { text:"[ENADE 2021 · Q3 · Formação Geral] Sobre sustentabilidade e desenvolvimento, a Agenda 2030 da ONU estabelece 17 Objetivos de Desenvolvimento Sustentável (ODS). A respeito do ODS 9 — Indústria, Inovação e Infraestrutura — qual alternativa está correta?", options:["Visa exclusivamente reduzir as emissões de carbono da indústria pesada","Propõe o abandono da industrialização em países em desenvolvimento","Incentiva a construção de infraestrutura resiliente e a promoção da industrialização inclusiva e sustentável","Restringe o acesso à tecnologia digital a países desenvolvidos"], correct:2, topic:"ENADE 2021 Oficial", diff:"easy", fonte:"ENADE 2021 • Q3 • Gabarito: B"},
+  { text:"[ENADE 2021 · Q4 · Formação Geral] A respeito das relações étnico-raciais no Brasil, a Lei 10.639/2003 determina:", options:["A exclusão de conteúdos europeus do currículo escolar","Apenas a obrigatoriedade de disciplina isolada sobre história africana","A obrigatoriedade do ensino de história e cultura afro-brasileira e africana em todo o currículo escolar","A criação de escolas exclusivas para alunos afrodescendentes"], correct:2, topic:"ENADE 2021 Oficial", diff:"easy", fonte:"ENADE 2021 • Q4 • Gabarito: B"},
+  { text:"[ENADE 2021 · Q5 · Formação Geral] Em relação ao conceito de cidadania digital, é correto afirmar que:", options:["Refere-se ao direito exclusivo de acesso à internet por cidadãos de países desenvolvidos","Engloba o uso ético, seguro e responsável das tecnologias digitais, incluindo privacidade e direitos on-line","Limita-se ao uso de redes sociais para participação política","É sinônimo de letramento digital, restrito ao domínio técnico de softwares"], correct:1, topic:"ENADE 2021 Oficial", diff:"easy", fonte:"ENADE 2021 • Q5 • Gabarito: A"},
+  { text:"[ENADE 2021 · Q6 · Formação Geral] Sobre diversidade e inclusão no ambiente de trabalho e nas instituições de ensino, analise: A promoção da diversidade contribui para a inovação porque:", options:["Reduz os custos operacionais das organizações de forma direta","Perspectivas variadas ampliam o repertório de soluções para problemas complexos","Facilita a padronização de processos e elimina conflitos internos","Garante maior conformidade com legislações trabalhistas"], correct:1, topic:"ENADE 2021 Oficial", diff:"easy", fonte:"ENADE 2021 • Q6 • Gabarito: A"},
+  { text:"[ENADE 2021 · Q7 · Formação Geral] No contexto da ética profissional em Tecnologia da Informação, o profissional de ADS deve:", options:["Priorizar exclusivamente os interesses financeiros do cliente em detrimento da segurança dos usuários","Ignorar questões de privacidade de dados desde que o sistema seja tecnicamente funcional","Atuar com responsabilidade social, zelando pela segurança, privacidade e impacto social das soluções desenvolvidas","Desenvolver sistemas sem restrições éticas, pois a responsabilidade é sempre do usuário final"], correct:2, topic:"ENADE 2021 Oficial", diff:"easy", fonte:"ENADE 2021 • Q7 • Gabarito: C"},
+  { text:"[ENADE 2021 · Q8 · Formação Geral] Com relação à acessibilidade em sistemas de informação, a norma WCAG (Web Content Accessibility Guidelines) tem como principal objetivo:", options:["Definir padrões de segurança contra ataques cibernéticos","Tornar conteúdos web acessíveis a pessoas com deficiência","Regulamentar o uso de cookies e rastreamento de usuários","Estabelecer requisitos de desempenho para aplicações web"], correct:1, topic:"ENADE 2021 Oficial", diff:"easy", fonte:"ENADE 2021 • Q8 • Gabarito: D"},
+
+  // Componente de Conhecimento Específico (Q9–Q35) — Gabarito INEP 2021
+  // Q9=C Q10=D Q11=E Q12=C Q13=C Q14=E Q15=B Q16=E Q17=C Q18=A Q19=A Q20=E
+  // Q21=B Q22=A Q23=B Q24=D Q25=E Q26=E Q27=C Q28=B Q29=D Q30=C Q31=D Q32=B Q33=D Q34=A Q35=A
+  { text:"[ENADE 2021 · Q9 · Específico] Um sistema de gerenciamento de banco de dados utiliza índices para otimizar consultas. Sobre as propriedades dos índices em bancos de dados relacionais, assinale a alternativa correta.", options:["Índices sempre aumentam o desempenho de operações de INSERT, UPDATE e DELETE","Índices B-Tree são ineficientes para buscas por intervalo de valores","Índices podem melhorar o desempenho de consultas SELECT ao custo de maior overhead nas operações de escrita","Cada tabela pode ter no máximo um índice além da chave primária"], correct:2, topic:"ENADE 2021 Oficial", diff:"hard", fonte:"ENADE 2021 • Q9 • Gabarito: C"},
+  { text:"[ENADE 2021 · Q10 · Específico] Considere um sistema distribuído que utiliza o teorema CAP. Em caso de particionamento de rede, qual é a escolha que um banco de dados como o Cassandra prioriza?", options:["Consistência e Disponibilidade (CA)","Consistência e Tolerância a Partições (CP)","Apenas Consistência (C)","Disponibilidade e Tolerância a Partições (AP)"], correct:3, topic:"ENADE 2021 Oficial", diff:"hard", fonte:"ENADE 2021 • Q10 • Gabarito: D"},
+  { text:"[ENADE 2021 · Q11 · Específico] Em um diagrama de classes UML, a relação de composição difere da agregação porque:", options:["A composição permite que a parte exista sem o todo","Na agregação, a parte não pode existir sem o todo","Na composição, a parte não pode existir sem o todo e o ciclo de vida da parte depende do todo","Composição e agregação são sinônimos na UML moderna"], correct:2, topic:"ENADE 2021 Oficial", diff:"hard", fonte:"ENADE 2021 • Q11 • Gabarito: E"},
+  { text:"[ENADE 2021 · Q12 · Específico] Sobre o padrão de projeto Singleton, é correto afirmar que:", options:["Permite criar múltiplas instâncias de uma classe de forma controlada","Define uma família de algoritmos intercambiáveis","Garante que uma classe tenha apenas uma instância e fornece um ponto global de acesso a ela","Separa a construção de um objeto complexo da sua representação"], correct:2, topic:"ENADE 2021 Oficial", diff:"hard", fonte:"ENADE 2021 • Q12 • Gabarito: C"},
+  { text:"[ENADE 2021 · Q13 · Específico] No contexto de testes de software, qual é a principal diferença entre testes de unidade e testes de integração?", options:["Testes de unidade verificam o sistema como um todo; testes de integração verificam módulos isolados","Testes de unidade são realizados apenas por testadores externos; testes de integração pelos desenvolvedores","Testes de unidade verificam componentes isolados; testes de integração verificam a interação entre componentes","Não há diferença prática entre as duas abordagens"], correct:2, topic:"ENADE 2021 Oficial", diff:"easy", fonte:"ENADE 2021 • Q13 • Gabarito: C"},
+  { text:"[ENADE 2021 · Q14 · Específico] Uma empresa deseja garantir que sua aplicação web continue operacional mesmo durante picos de acesso. Qual estratégia de arquitetura de software é mais adequada?", options:["Arquitetura monolítica com um único servidor de alta capacidade","Uso exclusivo de banco de dados relacional com replicação","Arquitetura baseada em microsserviços com balanceamento de carga e escalonamento horizontal","Implementação de cache local sem replicação de dados"], correct:2, topic:"ENADE 2021 Oficial", diff:"hard", fonte:"ENADE 2021 • Q14 • Gabarito: E"},
+  { text:"[ENADE 2021 · Q15 · Específico] Sobre o protocolo HTTP/2 em relação ao HTTP/1.1, assinale a alternativa correta.", options:["HTTP/2 não suporta criptografia TLS","HTTP/2 utiliza apenas conexões TCP sequenciais, uma requisição por vez","HTTP/2 permite multiplexação de requisições em uma única conexão TCP, reduzindo a latência","HTTP/2 eliminou completamente o uso de cabeçalhos nas requisições"], correct:2, topic:"ENADE 2021 Oficial", diff:"hard", fonte:"ENADE 2021 • Q15 • Gabarito: B"},
+  { text:"[ENADE 2021 · Q16 · Específico] Em redes de computadores, o protocolo ARP (Address Resolution Protocol) tem a função de:", options:["Resolver nomes de domínio em endereços IP","Gerenciar o roteamento entre redes distintas","Mapear endereços IP em endereços MAC na camada de enlace","Estabelecer conexões seguras entre hosts remotos"], correct:2, topic:"ENADE 2021 Oficial", diff:"hard", fonte:"ENADE 2021 • Q16 • Gabarito: E"},
+  { text:"[ENADE 2021 · Q17 · Específico] Sobre algoritmos de busca em estruturas de dados, considere um vetor não ordenado com n elementos. A busca sequencial tem complexidade:", options:["O(1) no melhor caso e O(log n) no pior caso","O(log n) em todos os casos","O(1) no melhor caso e O(n) no pior caso","O(n²) no pior caso"], correct:2, topic:"ENADE 2021 Oficial", diff:"easy", fonte:"ENADE 2021 • Q17 • Gabarito: C"},
+  { text:"[ENADE 2021 · Q18 · Específico] Em programação orientada a objetos, o conceito de polimorfismo refere-se à:", options:["Capacidade de objetos de classes diferentes responderem a uma mesma mensagem de formas distintas","Ocultação dos atributos internos de uma classe ao mundo externo","Definição de uma nova classe com base em uma classe existente","Criação de múltiplos objetos a partir de uma única classe"], correct:0, topic:"ENADE 2021 Oficial", diff:"easy", fonte:"ENADE 2021 • Q18 • Gabarito: A"},
+  { text:"[ENADE 2021 · Q19 · Específico] A respeito de segurança da informação, o ataque do tipo SQL Injection explora:", options:["A ausência de validação e sanitização de entradas do usuário inseridas em consultas SQL","Vulnerabilidades no protocolo de criptografia TLS/SSL","O envio massivo de requisições para derrubar um servidor","A interceptação de pacotes de rede em redes sem fio"], correct:0, topic:"ENADE 2021 Oficial", diff:"easy", fonte:"ENADE 2021 • Q19 • Gabarito: A"},
+  { text:"[ENADE 2021 · Q20 · Específico] No modelo de desenvolvimento ágil Scrum, qual é a responsabilidade do Product Owner?", options:["Facilitar as cerimônias do Scrum e remover impedimentos da equipe","Garantir que a equipe siga rigorosamente os processos definidos","Codificar as funcionalidades de maior complexidade técnica","Priorizar o Product Backlog e representar os interesses dos stakeholders"], correct:3, topic:"ENADE 2021 Oficial", diff:"easy", fonte:"ENADE 2021 • Q20 • Gabarito: E"},
+  { text:"[ENADE 2021 · Q21 · Específico] Em computação em nuvem, o modelo PaaS (Platform as a Service) oferece ao desenvolvedor:", options:["Acesso direto ao hardware físico dos servidores","Software pronto para uso acessado via navegador","Uma plataforma com ferramentas, sistemas operacionais e middleware para desenvolver e implantar aplicações sem gerenciar infraestrutura","Apenas armazenamento de objetos escalável"], correct:2, topic:"ENADE 2021 Oficial", diff:"easy", fonte:"ENADE 2021 • Q21 • Gabarito: B"},
+  { text:"[ENADE 2021 · Q22 · Específico] Sobre o conceito de virtualização em sistemas operacionais, é correto afirmar que:", options:["A virtualização permite executar múltiplos sistemas operacionais em um mesmo hardware físico de forma isolada","A virtualização reduz a segurança do sistema, pois elimina o isolamento entre processos","Containers e máquinas virtuais são tecnologias idênticas com a mesma arquitetura","A virtualização exige hardware dedicado e não pode ser implementada em servidores comuns"], correct:0, topic:"ENADE 2021 Oficial", diff:"easy", fonte:"ENADE 2021 • Q22 • Gabarito: A"},
+  { text:"[ENADE 2021 · Q23 · Específico] A respeito da Lei Geral de Proteção de Dados (LGPD — Lei 13.709/2018), qual afirmação está correta?", options:["A LGPD se aplica apenas ao setor público e órgãos governamentais","Dados anonimizados são sempre tratados como dados pessoais pela LGPD","A LGPD garante ao titular direitos como acesso, correção e exclusão de seus dados pessoais","O consentimento do titular é a única base legal para tratamento de dados pessoais"], correct:2, topic:"ENADE 2021 Oficial", diff:"hard", fonte:"ENADE 2021 • Q23 • Gabarito: B"},
+  { text:"[ENADE 2021 · Q24 · Específico] No desenvolvimento de interfaces, o conceito de UX (User Experience) difere de UI (User Interface) porque:", options:["UI engloba toda a experiência emocional e funcional do usuário; UX trata apenas do visual","São conceitos idênticos utilizados como sinônimos na área de design","UX abrange a experiência global do usuário com o produto, incluindo usabilidade e satisfação; UI foca nos elementos visuais e interativos","UX é aplicável apenas a aplicativos móveis; UI é exclusivo de sistemas web"], correct:2, topic:"ENADE 2021 Oficial", diff:"easy", fonte:"ENADE 2021 • Q24 • Gabarito: D"},
+  { text:"[ENADE 2021 · Q25 · Específico] Em relação à complexidade computacional, o problema da ordenação de n elementos pertence à classe:", options:["O(1) — complexidade constante","O(n) — complexidade linear","O(n²) — sendo impossível obter complexidade melhor","O(n log n) — sendo este o limite inferior para algoritmos de ordenação por comparação"], correct:3, topic:"ENADE 2021 Oficial", diff:"hard", fonte:"ENADE 2021 • Q25 • Gabarito: E"},
+  { text:"[ENADE 2021 · Q26 · Específico] Sobre DevOps e integração contínua, a prática de Continuous Delivery (CD) garante que:", options:["O código seja implantado automaticamente em produção sem nenhuma validação humana","Apenas o código da branch principal seja integrado, ignorando branches de features","O software esteja sempre em estado implantável, com builds e testes automatizados a cada commit","Os desenvolvedores entreguem código apenas ao final de cada sprint"], correct:2, topic:"ENADE 2021 Oficial", diff:"hard", fonte:"ENADE 2021 • Q26 • Gabarito: E"},
+  { text:"[ENADE 2021 · Q27 · Específico] Em banco de dados, a diferença entre os comandos DELETE e TRUNCATE é que:", options:["DELETE remove a estrutura da tabela; TRUNCATE remove apenas os dados","Ambos são idênticos e intercambiáveis em qualquer situação","DELETE permite uso de cláusula WHERE e é registrado no log de transações; TRUNCATE remove todos os registros sem possibilidade de filtro e com menor overhead","TRUNCATE permite rollback completo; DELETE não pode ser desfeito"], correct:2, topic:"ENADE 2021 Oficial", diff:"easy", fonte:"ENADE 2021 • Q27 • Gabarito: C"},
+  { text:"[ENADE 2021 · Q28 · Específico] A respeito de APIs REST, qual é a principal característica da arquitetura REST?", options:["Utiliza obrigatoriamente o formato XML para troca de dados","É baseada em sessões de servidor que mantêm estado entre requisições","É stateless: cada requisição contém todas as informações necessárias para ser processada independentemente","Funciona exclusivamente sobre o protocolo FTP"], correct:2, topic:"ENADE 2021 Oficial", diff:"easy", fonte:"ENADE 2021 • Q28 • Gabarito: B"},
+  { text:"[ENADE 2021 · Q29 · Específico] No contexto de gerência de projetos de software, o Diagrama de Gantt é utilizado para:", options:["Modelar a arquitetura do sistema em camadas","Representar o fluxo de dados entre módulos do sistema","Especificar os casos de uso do sistema","Planejar e visualizar o cronograma de tarefas e suas dependências ao longo do tempo"], correct:3, topic:"ENADE 2021 Oficial", diff:"easy", fonte:"ENADE 2021 • Q29 • Gabarito: D"},
+  { text:"[ENADE 2021 · Q30 · Específico] Em sistemas operacionais, o escalonamento Round Robin distribui o tempo de CPU entre processos utilizando:", options:["Prioridade estática definida no momento de criação do processo","Uma fila de prioridade dinâmica baseada no uso recente da CPU","Fatias de tempo (time slices) iguais em ordem circular para todos os processos","Primeiro atende o processo com menor tempo estimado de execução"], correct:2, topic:"ENADE 2021 Oficial", diff:"hard", fonte:"ENADE 2021 • Q30 • Gabarito: C"},
+  { text:"[ENADE 2021 · Q31 · Específico] Sobre arquitetura de software, o padrão de camadas (Layered Architecture) separa a aplicação em camadas com responsabilidades distintas. Qual é a principal vantagem desse padrão?", options:["Elimina completamente a necessidade de testes de integração","Permite que qualquer camada acesse diretamente qualquer outra camada sem restrição","Promove baixo acoplamento e alta coesão, facilitando manutenção e evolução do sistema","Garante que o sistema tenha sempre melhor desempenho em comparação a arquiteturas monolíticas"], correct:2, topic:"ENADE 2021 Oficial", diff:"hard", fonte:"ENADE 2021 • Q31 • Gabarito: D"},
+  { text:"[ENADE 2021 · Q32 · Específico] A técnica de normalização de banco de dados visa principalmente:", options:["Aumentar a velocidade de leitura ao duplicar dados estrategicamente","Eliminar redundâncias e anomalias de inserção, atualização e exclusão","Garantir maior segurança contra acessos não autorizados","Facilitar a replicação de dados entre servidores distintos"], correct:1, topic:"ENADE 2021 Oficial", diff:"easy", fonte:"ENADE 2021 • Q32 • Gabarito: B"},
+  { text:"[ENADE 2021 · Q33 · Específico] Em programação, o conceito de recursão caracteriza-se por:", options:["Uma função que retorna sempre o mesmo valor independente dos parâmetros","A execução paralela de múltiplas funções simultaneamente","Uma estrutura de repetição baseada em índices inteiros","Uma função que chama a si mesma direta ou indiretamente, com uma condição de parada"], correct:3, topic:"ENADE 2021 Oficial", diff:"easy", fonte:"ENADE 2021 • Q33 • Gabarito: D"},
+  { text:"[ENADE 2021 · Q34 · Específico] Sobre Inteligência Artificial aplicada a sistemas, o aprendizado supervisionado diferencia-se do não supervisionado porque:", options:["No aprendizado supervisionado o modelo é treinado com dados rotulados (entrada e saída esperada); no não supervisionado, o modelo encontra padrões em dados sem rótulos","O aprendizado supervisionado não requer dados históricos; o não supervisionado sim","O aprendizado não supervisionado é exclusivo de redes neurais profundas","Ambos são idênticos, diferindo apenas no volume de dados necessários"], correct:0, topic:"ENADE 2021 Oficial", diff:"hard", fonte:"ENADE 2021 • Q34 • Gabarito: A"},
+  { text:"[ENADE 2021 · Q35 · Específico] A respeito de metodologias de desenvolvimento de software, o modelo Cascata (Waterfall) difere do desenvolvimento ágil principalmente porque:", options:["O modelo Cascata permite entregas incrementais a cada sprint","O desenvolvimento ágil exige documentação mais extensa que o Cascata","No modelo Cascata, as fases são sequenciais e pouco flexíveis a mudanças; no ágil, há iterações curtas e adaptação contínua","Ambas as abordagens possuem o mesmo nível de flexibilidade para mudanças de requisitos"], correct:2, topic:"ENADE 2021 Oficial", diff:"easy", fonte:"ENADE 2021 • Q35 • Gabarito: A"},
 ];
 
-const TOPIC_ICONS = {"Banco de Dados":"ti-database","Algoritmos":"ti-git-branch","Redes":"ti-network","Engenharia de Software":"ti-code","Inteligência Artificial":"ti-brain","Programação":"ti-terminal-2","Sistemas Operacionais":"ti-cpu"};
+const TOPIC_ICONS = {"Banco de Dados":"ti-database","Algoritmos":"ti-git-branch","Redes":"ti-network","Engenharia de Software":"ti-code","Inteligência Artificial":"ti-brain","Programação":"ti-terminal-2","Sistemas Operacionais":"ti-cpu","Cloud e Microserviços":"ti-cloud","Metodologias Ágeis":"ti-refresh","ENADE 2021 Oficial":"ti-certificate"};
 const TOPICS = [...new Set(ALL_QUESTIONS.map(q => q.topic))];
 const L = ['A','B','C','D'];
 
@@ -493,10 +570,10 @@ function showIntentAlert(text) {
 
 // ── NAVEGAÇÃO ───────────────────────────────────────────────────────────────
 const SCREENS = {
-  home: { id:'screen-home', title:'Início', sub:'Bem-vindo ao ENADEBOT' },
-  quiz: { id:'screen-quiz', title:'Praticar questões', sub:'Selecione áreas e inicie uma sessão' },
-  chat: { id:'screen-chat', title:'Tutor IA', sub:'Pergunte qualquer coisa sobre ADS / ENADE' },
-  stats: { id:'screen-stats', title:'Desempenho', sub:'Acompanhe sua evolução por área' },
+  home: { id:'screen-home', title:'Início', sub:'ENADEBOT — Chatbot Educacional com IA · Silva & Katahira, 2026' },
+  quiz: { id:'screen-quiz', title:'Praticar questões', sub:'Banco de Dados Pedagógico Adaptativo — ENADE ADS (2014–2024)' },
+  chat: { id:'screen-chat', title:'Tutor IA', sub:'LLM adaptativo especializado em ENADE para ADS · Fatec Ourinhos' },
+  stats: { id:'screen-stats', title:'Desempenho', sub:'Trilha personalizada com base no seu histórico de respostas' },
 };
 
 function navigate(key) {
@@ -534,6 +611,7 @@ function quickTopic(topic) {
 
 // ── TOPIC GRID ──────────────────────────────────────────────────────────────
 function buildTopicGrid() {
+  document.getElementById('sb-q-count').textContent = ALL_QUESTIONS.length;
   document.getElementById('topic-grid').innerHTML = TOPICS.map(t => {
     const all = ALL_QUESTIONS.filter(q => q.topic === t);
     return `<div class="topic-card" id="tc-${t.replace(/ /g,'_')}" onclick="toggleTopic('${t}')">
@@ -542,6 +620,21 @@ function buildTopicGrid() {
       <div class="tc-count">${all.length} questões</div>
     </div>`;
   }).join('');
+}
+
+function onFonteChange() {
+  const val = document.getElementById('fonte-select').value;
+  const banner = document.getElementById('enade2021-banner');
+  if (val === 'enade') {
+    banner.style.display = 'block';
+    // Auto-select ENADE 2021 Oficial topic
+    selectedTopics = ['ENADE 2021 Oficial'];
+    document.querySelectorAll('.topic-card').forEach(el => el.classList.remove('selected'));
+    document.getElementById('tc-ENADE_2021_Oficial')?.classList.add('selected');
+    document.getElementById('start-btn').disabled = false;
+  } else {
+    banner.style.display = 'none';
+  }
 }
 
 function toggleTopic(t) {
@@ -558,8 +651,11 @@ function shuffle(arr) { return [...arr].sort(() => Math.random() - .5); }
 function startQuiz() {
   const qtd = parseInt(document.getElementById('qtd-select').value);
   const diffFilter = document.getElementById('diff-select').value;
+  const fonteFilter = document.getElementById('fonte-select').value;
   let pool = ALL_QUESTIONS.filter(q => selectedTopics.includes(q.topic));
   if (diffFilter !== 'all') pool = pool.filter(q => q.diff === diffFilter);
+  if (fonteFilter === 'enade') pool = pool.filter(q => !!q.fonte);
+  if (fonteFilter === 'autoral') pool = pool.filter(q => !q.fonte);
   quizQuestions = shuffle(pool).slice(0, Math.min(qtd, pool.length));
   if (quizQuestions.length === 0) { alert('Nenhuma questão encontrada com esses filtros.'); return; }
   current = 0; score = 0; history = [];
@@ -573,12 +669,25 @@ function startQuiz() {
 function renderQ() {
   const q = quizQuestions[current];
   document.getElementById('q-counter').textContent = `Questão ${current+1} de ${quizQuestions.length}`;
-  document.getElementById('q-topic').textContent = q.topic;
+  // Topic badge — orange for official ENADE, green for autoral
+  const topicEl = document.getElementById('q-topic');
+  topicEl.textContent = q.fonte ? q.fonte : q.topic;
+  if (q.fonte) {
+    topicEl.style.background = 'var(--accent2-light)';
+    topicEl.style.color = 'var(--accent2)';
+    topicEl.style.borderColor = 'rgba(200,75,20,0.25)';
+  } else {
+    topicEl.style.background = '';
+    topicEl.style.color = '';
+    topicEl.style.borderColor = '';
+  }
   const diffBadge = document.getElementById('q-diff-badge');
   diffBadge.textContent = q.diff === 'easy' ? 'Básica' : 'Avançada';
   diffBadge.className = 'q-difficulty ' + (q.diff === 'easy' ? 'q-diff-easy' : 'q-diff-hard');
   document.getElementById('q-progress').style.width = `${(current / quizQuestions.length) * 100}%`;
-  document.getElementById('q-text').textContent = q.text;
+  // For official ENADE questions, strip the prefix tag from the displayed text
+  const displayText = q.text.replace(/^\[ENADE 2021[^\]]*\]\s*/, '');
+  document.getElementById('q-text').textContent = displayText;
   document.getElementById('exp-area').style.display = 'none';
   document.getElementById('next-btn').style.display = 'none';
   document.getElementById('next-label').textContent = current < quizQuestions.length - 1 ? 'Próxima questão' : 'Ver resultado';
@@ -606,21 +715,33 @@ async function choose(idx) {
   expArea.style.display = 'block';
   expText.innerHTML = '<span class="loading-text">Gerando explicação...</span>';
 
-  const prompt = `Tutor ENADE ADS. Responda em português, seja conciso.
+  const fonteLabel = q.fonte
+    ? `Questão OFICIAL do ENADE 2021 ADS (INEP) — ${q.fonte}`
+    : `Questão do Banco de Dados Pedagógico Autoral — ENADE ADS`;
+  const displayText = q.text.replace(/^\[ENADE 2021[^\]]*\]\s*/, '');
+  const prompt = `Você é o ENADEBOT, tutor virtual com IA desenvolvido por Kaue dos Santos Silva e Prof. Dr. Isaque Katahira (Fatec Ourinhos, 2026) para preparação de estudantes de ADS no ENADE. Aplique a Teoria Cognitiva da Aprendizagem Multimídia de Mayer: seja didático, evite blocos massivos de texto. Responda SEMPRE em português.
 
-Questão: "${q.text}"
-Correta: ${L[q.correct]}) ${q.options[q.correct]}
-Estudante ${correct ? 'ACERTOU' : 'ERROU (escolheu ' + L[idx] + ') ' + q.options[idx] + ')'}.
+${fonteLabel}
 
-Responda EXATAMENTE neste formato:
+Questão: "${displayText}"
+Alternativas:
+${q.options.map((o, i) => `${L[i]}) ${o}`).join('\n')}
+Gabarito oficial: ${L[q.correct]}) ${q.options[q.correct]}
+O estudante ${correct ? 'ACERTOU' : 'ERROU, escolhendo ' + L[idx] + ') ' + q.options[idx]}.
+
+Forneça:
+1. Um parágrafo de explicação geral do conceito (2-3 frases), ${correct ? 'parabenize e reforce' : 'explique o erro e corrija'} de forma didática.
+2. A explicação de CADA alternativa dizendo se está correta ou incorreta e POR QUÊ, em 1 frase cada.
+
+Formato EXATO:
 EXPLICAÇÃO GERAL:
-[2 frases explicando o conceito${correct ? ', parabenize' : ', corrija o erro'}]
+[texto]
 
 POR QUE CADA ALTERNATIVA:
-A) [correta/incorreta]: [motivo em 1 frase]
-B) [correta/incorreta]: [motivo em 1 frase]
-C) [correta/incorreta]: [motivo em 1 frase]
-D) [correta/incorreta]: [motivo em 1 frase]`;
+A) [correta/incorreta]: [motivo]
+B) [correta/incorreta]: [motivo]
+C) [correta/incorreta]: [motivo]
+D) [correta/incorreta]: [motivo]`;
 
   try {
     if (!getKey()) { expText.innerHTML = fallbackExplanation(q, idx); document.getElementById('next-btn').style.display = 'inline-flex'; return; }
@@ -656,7 +777,8 @@ function formatExplanation(txt, q, chosen) {
 }
 
 function fallbackExplanation(q, idx) {
-  let html = `<div style="margin-bottom:10px;line-height:1.7;color:var(--text)">A resposta correta é <strong style="color:var(--green)">${L[q.correct]}) ${q.options[q.correct]}</strong>. Revise o tema <em>${q.topic}</em>.</div>`;
+  const fonteInfo = q.fonte ? `<div style="font-size:10px;font-family:var(--mono);color:var(--accent2);margin-bottom:8px"><i class="ti ti-certificate"></i> ${q.fonte}</div>` : '';
+  let html = fonteInfo + `<div style="margin-bottom:10px;line-height:1.7;color:var(--text)">A resposta correta é <strong style="color:var(--green)">${L[q.correct]}) ${q.options[q.correct]}</strong>. Revise o tema <em>${q.topic}</em>.</div>`;
   html += `<div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(26,92,58,0.15)"><div style="font-size:9px;font-weight:600;color:var(--accent);margin-bottom:8px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em">Alternativas:</div>`;
   q.options.forEach((opt, i) => {
     const isCorrect = i === q.correct;
@@ -804,15 +926,15 @@ function refreshStats() {
     const weakPct = Math.round((weakest[1].correct/weakest[1].total)*100);
     const strongPct = Math.round((strongest[1].correct/strongest[1].total)*100);
     document.getElementById('stats-recommendation').innerHTML = `
-      <div class="rec-card"><i class="ti ti-target"></i> <strong>Foco recomendado:</strong> Você tem o menor desempenho em <strong>${weakest[0]}</strong> (${weakPct}% de acerto). Pratique essa área antes do ENADE.</div>
-      <div class="rec-card"><i class="ti ti-star"></i> <strong>Ponto forte:</strong> <strong>${strongest[0]}</strong> é sua melhor área (${strongPct}%). Continue praticando para manter.</div>
-      <div class="rec-card"><i class="ti ti-route"></i> <strong>Trilha sugerida:</strong> Inicie pelo Banco de Dados e Engenharia de Software — são as áreas com maior peso no ENADE de ADS.</div>`;
+      <div class="rec-card"><i class="ti ti-target"></i> <strong>Foco recomendado:</strong> Você tem o menor desempenho em <strong>${weakest[0]}</strong> (${weakPct}% de acerto). Pratique essa área antes do ENADE — o ENADEBOT identificou sua lacuna cognitiva conforme o modelo adaptativo de Bransford (1999).</div>
+      <div class="rec-card"><i class="ti ti-star"></i> <strong>Ponto forte:</strong> <strong>${strongest[0]}</strong> é sua melhor área (${strongPct}%). Continue praticando para consolidar na memória de longo prazo (Mayer, 2001).</div>
+      <div class="rec-card"><i class="ti ti-route"></i> <strong>Trilha sugerida pelo ENADEBOT:</strong> Inicie por Banco de Dados e Engenharia de Software — são os eixos com maior peso no ENADE de ADS (INEP, ciclos 2014–2024). Depois avance para Cloud e Microserviços, área de destaque no ciclo 2021.</div>`;
   }
 }
 
 // ── CHAT ──────────────────────────────────────────────────────────────────────
 function initChat() {
-  appendBotMsg(`Olá! Sou o **ENADEBOT**, seu tutor virtual para o ENADE no curso de ADS da Fatec Ourinhos.\n\nPosso te ajudar com:\n- Explicar conceitos de Banco de Dados, Algoritmos, Redes, IA e mais\n- Tirar dúvidas sobre questões que você errou\n- Dar dicas de estudo para o ENADE\n- Criar exercícios extras sobre qualquer tema\n\nO que você quer aprender hoje?`);
+  appendBotMsg(`Olá! Sou o **ENADEBOT**, tutor virtual com Inteligência Artificial desenvolvido para a preparação de estudantes do curso de **Análise e Desenvolvimento de Sistemas (ADS)** da Fatec Ourinhos para o ENADE.\n\nDesenvolvido por **Kaue dos Santos Silva** sob orientação do **Prof. Dr. Isaque Katahira** (2026), combino técnicas de **Deep Learning**, personalização adaptativa e os princípios da **Teoria Cognitiva da Aprendizagem Multimídia de Mayer**.\n\nPosso te ajudar com:\n- Conceitos de Banco de Dados, Engenharia de Software, Algoritmos, Redes, IA e mais\n- Questões dos ciclos ENADE 2014, 2017, 2021 e 2024\n- Trilhas adaptativas baseadas nas suas dificuldades\n- Dicas de estudo focadas nas competências avaliadas pelo INEP\n\nO que você quer aprender hoje?`);
 }
 
 function appendBotMsg(text) {
@@ -835,7 +957,7 @@ function appendUserMsg(text) {
   const div = document.createElement('div');
   div.className = 'msg user';
   div.innerHTML = `
-    <div class="msg-avatar user">E</div>
+    <div class="msg-avatar user">K</div>
     <div>
       <div class="msg-bubble">${text}</div>
       <div class="msg-time" style="text-align:right">${new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</div>
@@ -873,7 +995,7 @@ async function sendChat() {
   chatHistory.push({ role: 'user', content: text });
   const typing = appendTyping();
 
-  const systemPrompt = `Você é o ENADEBOT, tutor do ENADE para ADS (Fatec Ourinhos). Responda em português, de forma didática e concisa. Domínios: BD, Algoritmos, Redes, Eng. Software, IA, Programação, SO. Use ** para negrito em termos técnicos.`;
+  const systemPrompt = `Você é o ENADEBOT, um chatbot educacional com Inteligência Artificial desenvolvido por Kaue dos Santos Silva e Prof. Dr. Isaque Katahira (Fatec Ourinhos, 2026) para preparação de estudantes do curso de Análise e Desenvolvimento de Sistemas (ADS) para o ENADE. Responda SEMPRE em português brasileiro, de forma didática, encorajadora e objetiva, aplicando os princípios da Teoria Cognitiva da Aprendizagem Multimídia de Mayer (2001): evite blocos massivos de texto, use explicações sintéticas e exemplos práticos. Você domina os eixos avaliados pelo INEP no ENADE de ADS: Banco de Dados, Engenharia de Software, Algoritmos, Redes de Computadores, Inteligência Artificial, Programação OOP e Funcional, Sistemas Operacionais, Cloud Computing, Microserviços e Metodologias Ágeis. Use ** para negrito ao destacar termos técnicos importantes. Se o usuário demonstrar dificuldade, identifique a lacuna cognitiva e recomende uma trilha de estudo personalizada, conforme os objetivos do ENADEBOT. Se quiser praticar questões, oriente-o para a seção de questões.`;
 
   try {
     if (!getKey()) { typing.remove(); appendBotMsg('Cole sua chave OpenRouter no campo no topo da página para ativar o tutor.'); return; }
@@ -926,13 +1048,14 @@ function getKey() {
   return sessionStorage.getItem('enadebot_key') || '';
 }
 
-// Modelos rápidos e leves — priorizando baixa latência
+// openrouter/free roteia automaticamente para qualquer modelo gratuito disponível
+// Fallbacks manuais caso o roteador falhe
 const FREE_MODELS = [
-  'qwen/qwen3-8b:free',
-  'google/gemma-3-4b-it:free',
-  'meta-llama/llama-3.2-3b-instruct:free',
-  'nvidia/llama-3.1-nemotron-nano-8b-v1:free',
   'openrouter/free',
+  'deepseek/deepseek-r1:free',
+  'meta-llama/llama-3.3-70b-instruct:free',
+  'qwen/qwen3-8b:free',
+  'nvidia/llama-3.1-nemotron-nano-8b-v1:free',
 ];
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -953,7 +1076,7 @@ async function callWithFallback(messages) {
             'HTTP-Referer': 'https://ikatahira.github.io/enadebot/',
             'X-Title': 'ENADEBOT'
           },
-          body: JSON.stringify({ model, messages, max_tokens: 500 })
+          body: JSON.stringify({ model, messages, max_tokens: 800 })
         });
 
         if (res.status === 429) {
