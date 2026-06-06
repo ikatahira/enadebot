@@ -205,12 +205,80 @@ button { font-family: var(--font); cursor: pointer; border: none; transition: al
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 99px; }
+
+/* ── LIKERT SURVEY ──────────────────────────────────────────────────── */
+.survey-wrap { max-width: 640px; }
+.survey-header { background: var(--accent); border-radius: var(--radius); padding: 22px 24px; margin-bottom: 20px; color: #fff; }
+.survey-header h2 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+.survey-header p { font-size: 13px; opacity: .8; line-height: 1.6; }
+.survey-block { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 12px; box-shadow: var(--shadow); }
+.survey-q { font-size: 14px; font-weight: 500; margin-bottom: 14px; line-height: 1.5; }
+.survey-q span { font-size: 10px; font-family: var(--mono); color: var(--text3); font-weight: 400; display: block; margin-top: 3px; }
+.likert-row { display: flex; gap: 6px; }
+.likert-opt { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; }
+.likert-opt input[type=radio] { display: none; }
+.likert-circle { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--border2); background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 11px; font-family: var(--mono); color: var(--text3); transition: all .15s; cursor: pointer; }
+.likert-opt input[type=radio]:checked + .likert-circle { background: var(--accent); border-color: var(--accent); color: #fff; }
+.likert-opt:hover .likert-circle { border-color: var(--accent-mid); background: var(--accent-light); color: var(--accent); }
+.likert-lbl { font-size: 9px; color: var(--text3); text-align: center; line-height: 1.3; max-width: 48px; }
+.likert-scale-labels { display: flex; justify-content: space-between; margin-top: 4px; }
+.likert-scale-labels span { font-size: 9px; color: var(--text3); font-family: var(--mono); }
+.survey-open { width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius-sm); font-family: var(--font); font-size: 13px; color: var(--text); padding: 10px 12px; outline: none; resize: vertical; min-height: 72px; margin-top: 8px; }
+.survey-open:focus { border-color: var(--accent); }
+.survey-progress { height: 3px; background: var(--surface3); border-radius: 99px; margin-bottom: 18px; }
+.survey-progress-fill { height: 3px; background: var(--accent); border-radius: 99px; transition: width .4s; }
+.survey-step-label { font-size: 10px; font-family: var(--mono); color: var(--text3); margin-bottom: 6px; }
+.survey-thankyou { text-align: center; padding: 48px 24px; }
+.survey-thankyou i { font-size: 48px; color: var(--green); display: block; margin-bottom: 16px; }
+.survey-thankyou h2 { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+.survey-thankyou p { font-size: 13px; color: var(--text2); line-height: 1.7; max-width: 400px; margin: 0 auto 24px; }
+
+/* ── MOBILE RESPONSIVE ──────────────────────────────────────────────── */
+.sb-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 99; }
+.sb-overlay.open { display: block; }
+.mob-menu-btn { display: none; background: none; border: none; color: var(--text2); font-size: 20px; padding: 4px 6px; cursor: pointer; margin-right: 8px; }
+
+@media (max-width: 768px) {
+  .mob-menu-btn { display: flex; align-items: center; }
+  .sidebar {
+    position: fixed; left: -260px; top: 0; bottom: 0; z-index: 100;
+    width: 260px; min-width: 260px;
+    transition: left .25s cubic-bezier(.4,0,.2,1);
+    box-shadow: 2px 0 16px rgba(0,0,0,0.12);
+  }
+  .sidebar.open { left: 0; }
+  .shell { overflow: hidden; }
+  .main { width: 100%; }
+  .screen { padding: 14px; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .grid-2 { grid-template-columns: 1fr; }
+  .topbar { padding: 10px 14px; }
+  #api-key-area { display: none !important; }
+  .topbar-right { gap: 6px; }
+  .home-hero { padding: 18px 16px; }
+  .hero-title { font-size: 17px; }
+  .hero-desc { font-size: 12px; }
+  .stat-card-val { font-size: 20px; }
+  .chat-layout { height: calc(100vh - 54px); }
+  .topic-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+  .controls-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .q-shell { max-width: 100%; }
+  .likert-row { gap: 3px; }
+  .likert-circle { width: 30px; height: 30px; font-size: 10px; }
+  .likert-lbl { font-size: 8px; max-width: 38px; }
+  .survey-wrap { max-width: 100%; }
+  .mob-api-bar { display: flex !important; }
+}
+.mob-api-bar { display: none; background: var(--surface2); border-top: 1px solid var(--border); padding: 8px 14px; align-items: center; gap: 8px; }
+.mob-api-bar input { flex: 1; font-size: 12px; font-family: var(--mono); padding: 5px 10px; border: 1px solid var(--border2); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); outline: none; }
+.mob-api-bar span { font-size: 10px; font-family: var(--mono); color: var(--text3); white-space: nowrap; }
 </style>
 </head>
 <body>
+<div class="sb-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
 <div class="shell">
 
-  <aside class="sidebar">
+  <aside class="sidebar" id="sidebar">
     <div class="sb-logo">
       <div class="sb-logo-icon">EB</div>
       <div>
@@ -219,24 +287,25 @@ button { font-family: var(--font); cursor: pointer; border: none; transition: al
       </div>
     </div>
     <div class="sb-section">Menu</div>
-    <div class="sb-nav-item active" onclick="navigate('home')"><i class="ti ti-home"></i> Início</div>
-    <div class="sb-nav-item" onclick="navigate('quiz')"><i class="ti ti-help-circle"></i> Praticar questões <span class="sb-badge" id="sb-q-count">72</span></div>
-    <div class="sb-nav-item" onclick="navigate('chat')"><i class="ti ti-message-chatbot"></i> Tutor IA</div>
-    <div class="sb-nav-item" onclick="navigate('stats')"><i class="ti ti-chart-bar"></i> Desempenho</div>
+    <div class="sb-nav-item active" onclick="navigate('home');closeSidebar()"><i class="ti ti-home"></i> Início</div>
+    <div class="sb-nav-item" onclick="navigate('quiz');closeSidebar()"><i class="ti ti-help-circle"></i> Praticar questões <span class="sb-badge" id="sb-q-count">72</span></div>
+    <div class="sb-nav-item" onclick="navigate('chat');closeSidebar()"><i class="ti ti-message-chatbot"></i> Tutor IA</div>
+    <div class="sb-nav-item" onclick="navigate('stats');closeSidebar()"><i class="ti ti-chart-bar"></i> Desempenho</div>
+    <div class="sb-nav-item" onclick="navigate('survey');closeSidebar()"><i class="ti ti-clipboard-check"></i> Avaliação</div>
     <div class="sb-divider"></div>
     <div class="sb-section">Áreas</div>
-    <div class="sb-nav-item" onclick="quickTopic('Banco de Dados')"><i class="ti ti-database"></i> Banco de Dados</div>
-    <div class="sb-nav-item" onclick="quickTopic('Engenharia de Software')"><i class="ti ti-code"></i> Eng. de Software</div>
-    <div class="sb-nav-item" onclick="quickTopic('Inteligência Artificial')"><i class="ti ti-brain"></i> Inteligência Artificial</div>
-    <div class="sb-nav-item" onclick="quickTopic('Algoritmos')"><i class="ti ti-git-branch"></i> Algoritmos</div>
-    <div class="sb-nav-item" onclick="quickTopic('Redes')"><i class="ti ti-network"></i> Redes</div>
-    <div class="sb-nav-item" onclick="quickTopic('Programação')"><i class="ti ti-terminal-2"></i> Programação</div>
-    <div class="sb-nav-item" onclick="quickTopic('Sistemas Operacionais')"><i class="ti ti-cpu"></i> Sist. Operacionais</div>
-    <div class="sb-nav-item" onclick="quickTopic('Cloud e Microserviços')"><i class="ti ti-cloud"></i> Cloud & Microserviços</div>
-    <div class="sb-nav-item" onclick="quickTopic('Metodologias Ágeis')"><i class="ti ti-refresh"></i> Metodologias Ágeis</div>
+    <div class="sb-nav-item" onclick="quickTopic('Banco de Dados');closeSidebar()"><i class="ti ti-database"></i> Banco de Dados</div>
+    <div class="sb-nav-item" onclick="quickTopic('Engenharia de Software');closeSidebar()"><i class="ti ti-code"></i> Eng. de Software</div>
+    <div class="sb-nav-item" onclick="quickTopic('Inteligência Artificial');closeSidebar()"><i class="ti ti-brain"></i> Inteligência Artificial</div>
+    <div class="sb-nav-item" onclick="quickTopic('Algoritmos');closeSidebar()"><i class="ti ti-git-branch"></i> Algoritmos</div>
+    <div class="sb-nav-item" onclick="quickTopic('Redes');closeSidebar()"><i class="ti ti-network"></i> Redes</div>
+    <div class="sb-nav-item" onclick="quickTopic('Programação');closeSidebar()"><i class="ti ti-terminal-2"></i> Programação</div>
+    <div class="sb-nav-item" onclick="quickTopic('Sistemas Operacionais');closeSidebar()"><i class="ti ti-cpu"></i> Sist. Operacionais</div>
+    <div class="sb-nav-item" onclick="quickTopic('Cloud e Microserviços');closeSidebar()"><i class="ti ti-cloud"></i> Cloud & Microserviços</div>
+    <div class="sb-nav-item" onclick="quickTopic('Metodologias Ágeis');closeSidebar()"><i class="ti ti-refresh"></i> Metodologias Ágeis</div>
     <div class="sb-divider"></div>
     <div class="sb-section">ENADE Oficial</div>
-    <div class="sb-nav-item" style="border:1px solid rgba(200,75,20,0.25);background:var(--accent2-light);color:var(--accent2)" onclick="quickTopic('ENADE 2021 Oficial')"><i class="ti ti-certificate"></i> ENADE 2021 <span class="sb-badge" style="background:var(--accent2);color:#fff;border-color:var(--accent2)">35</span></div>
+    <div class="sb-nav-item" style="border:1px solid rgba(200,75,20,0.25);background:var(--accent2-light);color:var(--accent2)" onclick="quickTopic('ENADE 2021 Oficial');closeSidebar()"><i class="ti ti-certificate"></i> ENADE 2021 <span class="sb-badge" style="background:var(--accent2);color:#fff;border-color:var(--accent2)">35</span></div>
     <div class="sb-profile">
       <div class="sb-avatar">K</div>
       <div>
@@ -249,9 +318,12 @@ button { font-family: var(--font); cursor: pointer; border: none; transition: al
   <div class="main">
 
     <div class="topbar" id="topbar">
-      <div>
-        <div class="topbar-title" id="topbar-title">Início</div>
-        <div class="topbar-sub" id="topbar-sub">ENADEBOT — Chatbot Educacional com IA · Silva & Katahira, 2026</div>
+      <div style="display:flex;align-items:center;gap:4px">
+        <button class="mob-menu-btn" onclick="openSidebar()" aria-label="Menu"><i class="ti ti-menu-2"></i></button>
+        <div>
+          <div class="topbar-title" id="topbar-title">Início</div>
+          <div class="topbar-sub" id="topbar-sub">ENADEBOT — Chatbot Educacional com IA · Silva & Katahira, 2026</div>
+        </div>
       </div>
       <div class="topbar-right">
         <div id="api-key-area" style="display:flex;align-items:center;gap:7px">
@@ -262,6 +334,13 @@ button { font-family: var(--font); cursor: pointer; border: none; transition: al
         </div>
         <div class="streak-chip"><i class="ti ti-flame"></i> <span id="streak-count">0</span> dia(s)</div>
       </div>
+    </div>
+
+    <!-- Barra de API key para mobile -->
+    <div class="mob-api-bar" id="mob-api-bar">
+      <input type="password" placeholder="Chave OpenRouter (sk-or-...)"
+        style="" oninput="saveKey(this.value);document.getElementById('api-key-input').value=this.value"/>
+      <span id="mob-api-status">sem chave</span>
     </div>
 
     <!-- HOME -->
@@ -445,6 +524,13 @@ button { font-family: var(--font); cursor: pointer; border: none; transition: al
       </div>
     </div>
 
+    <!-- SURVEY LIKERT -->
+    <div class="screen" id="screen-survey">
+      <div class="survey-wrap">
+        <div id="survey-content"></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -570,10 +656,11 @@ function showIntentAlert(text) {
 
 // ── NAVEGAÇÃO ───────────────────────────────────────────────────────────────
 const SCREENS = {
-  home: { id:'screen-home', title:'Início', sub:'ENADEBOT — Chatbot Educacional com IA · Silva & Katahira, 2026' },
-  quiz: { id:'screen-quiz', title:'Praticar questões', sub:'Banco de Dados Pedagógico Adaptativo — ENADE ADS (2014–2024)' },
-  chat: { id:'screen-chat', title:'Tutor IA', sub:'LLM adaptativo especializado em ENADE para ADS · Fatec Ourinhos' },
-  stats: { id:'screen-stats', title:'Desempenho', sub:'Trilha personalizada com base no seu histórico de respostas' },
+  home:   { id:'screen-home',   title:'Início',           sub:'ENADEBOT — Chatbot Educacional com IA · Silva & Katahira, 2026' },
+  quiz:   { id:'screen-quiz',   title:'Praticar questões',sub:'Banco de Dados Pedagógico Adaptativo — ENADE ADS (2014–2024)' },
+  chat:   { id:'screen-chat',   title:'Tutor IA',         sub:'LLM adaptativo especializado em ENADE para ADS · Fatec Ourinhos' },
+  stats:  { id:'screen-stats',  title:'Desempenho',       sub:'Trilha personalizada com base no seu histórico de respostas' },
+  survey: { id:'screen-survey', title:'Avaliação',        sub:'Questionário de usabilidade — Escala Likert · Silva & Katahira, 2026' },
 };
 
 function navigate(key) {
@@ -590,6 +677,166 @@ function navigate(key) {
   if (key === 'home') refreshHome();
   if (key === 'stats') refreshStats();
   if (key === 'chat' && chatHistory.length === 0) initChat();
+  if (key === 'survey') initSurvey();
+}
+
+// ── SIDEBAR MOBILE ───────────────────────────────────────────────────────────
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sb-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sb-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Sincronizar chave API entre desktop e mobile
+function saveKey(val) {
+  const clean = val.trim();
+  sessionStorage.setItem('enadebot_key', clean);
+  const desktopStatus = document.getElementById('api-key-status');
+  const mobStatus = document.getElementById('mob-api-status');
+  let msg = 'sem chave', color = 'var(--text3)';
+  if (clean.startsWith('sk-or-')) { msg = '✓ chave salva'; color = 'var(--green)'; }
+  else if (clean.length > 10) { msg = '⚠ sk-or-...'; color = 'var(--yellow)'; }
+  if (desktopStatus) { desktopStatus.textContent = msg; desktopStatus.style.color = color; }
+  if (mobStatus) { mobStatus.textContent = msg; mobStatus.style.color = color; }
+}
+
+// ── SURVEY LIKERT ────────────────────────────────────────────────────────────
+const SURVEY_QUESTIONS = [
+  { id:'q1', section:'Usabilidade', text:'A interface do ENADEBOT é fácil de usar.', hint:'Considere facilidade de navegação e clareza dos elementos visuais.' },
+  { id:'q2', section:'Usabilidade', text:'Consegui navegar entre as seções sem dificuldade.', hint:'Início, Questões, Tutor IA e Desempenho.' },
+  { id:'q3', section:'Usabilidade', text:'O sistema funciona bem no dispositivo que utilizei (celular ou computador).', hint:'Responsividade e acesso às funcionalidades.' },
+  { id:'q4', section:'Conteúdo', text:'As questões apresentadas são relevantes para o ENADE em ADS.', hint:'Pertinência dos tópicos e qualidade das perguntas.' },
+  { id:'q5', section:'Conteúdo', text:'As explicações geradas pelo tutor após as questões foram claras e úteis.', hint:'Qualidade do feedback adaptativo.' },
+  { id:'q6', section:'Conteúdo', text:'O nível de dificuldade das questões é adequado para minha preparação.', hint:'Equilíbrio entre fácil e avançado.' },
+  { id:'q7', section:'Aprendizagem', text:'O ENADEBOT me ajudou a identificar lacunas no meu conhecimento.', hint:'Efeito sobre autoconsciência dos temas a estudar.' },
+  { id:'q8', section:'Aprendizagem', text:'Após usar o sistema, senti mais motivação para estudar para o ENADE.', hint:'Impacto sobre engajamento e motivação.' },
+  { id:'q9', section:'Aprendizagem', text:'Recomendaria o ENADEBOT a outros estudantes de ADS.', hint:'Percepção geral de valor da ferramenta.' },
+  { id:'q10', section:'Aberta', text:'Qual foi o maior problema técnico ou de usabilidade que você encontrou?', hint:'Descreva brevemente. Ex.: "O tutor IA não carregou", "A tela ficou cortada no celular".' },
+  { id:'q11', section:'Aberta', text:'Qual funcionalidade você mais gostou? Por quê?', hint:'Ex.: sistema de streak, trilha personalizada, explicações da IA...' },
+  { id:'q12', section:'Aberta', text:'Que melhoria mais importante você sugere para a próxima versão?', hint:'Seja específico. Ex.: "Quero mais questões de Redes", "As explicações deveriam ser mais detalhadas".' },
+];
+
+const LIKERT_LABELS = ['Discordo totalmente','Discordo','Neutro','Concordo','Concordo totalmente'];
+
+let surveyAnswers = {};
+
+function initSurvey() {
+  const el = document.getElementById('survey-content');
+  const likertQs = SURVEY_QUESTIONS.filter(q => q.section !== 'Aberta');
+  const openQs   = SURVEY_QUESTIONS.filter(q => q.section === 'Aberta');
+
+  let sections = [...new Set(likertQs.map(q => q.section))];
+
+  let html = `
+  <div class="survey-header">
+    <h2><i class="ti ti-clipboard-check" style="margin-right:8px"></i>Questionário de Avaliação — ENADEBOT</h2>
+    <p>Instrumento de pesquisa empírica para validação do protótipo.<br>
+    Para cada afirmação, selecione de 1 (Discordo totalmente) a 5 (Concordo totalmente).<br>
+    <strong style="opacity:.9">Suas respostas são anônimas e contribuem diretamente para o artigo.</strong></p>
+  </div>`;
+
+  sections.forEach(sec => {
+    html += `<div style="font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);font-family:var(--mono);margin:18px 0 8px;padding-left:2px">${sec}</div>`;
+    likertQs.filter(q => q.section === sec).forEach(q => {
+      html += `<div class="survey-block">
+        <div class="survey-q">${q.text}<span>${q.hint}</span></div>
+        <div class="likert-row">`;
+      for (let i = 1; i <= 5; i++) {
+        html += `<label class="likert-opt">
+          <input type="radio" name="${q.id}" value="${i}" onchange="surveyAnswers['${q.id}']=this.value;updateSurveyProgress()">
+          <div class="likert-circle">${i}</div>
+          <div class="likert-lbl">${i===1?'Discordo totalmente':i===5?'Concordo totalmente':''}</div>
+        </label>`;
+      }
+      html += `</div></div>`;
+    });
+  });
+
+  html += `<div style="font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);font-family:var(--mono);margin:18px 0 8px;padding-left:2px">Perguntas abertas</div>`;
+  openQs.forEach(q => {
+    html += `<div class="survey-block">
+      <div class="survey-q">${q.text}<span>${q.hint}</span></div>
+      <textarea class="survey-open" rows="3" placeholder="Escreva sua resposta aqui..."
+        oninput="surveyAnswers['${q.id}']=this.value;updateSurveyProgress()"></textarea>
+    </div>`;
+  });
+
+  html += `<div style="margin-top:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <div style="flex:1">
+      <div class="survey-step-label" id="survey-step-label">0 de ${likertQs.length} itens Likert respondidos</div>
+      <div class="survey-progress"><div class="survey-progress-fill" id="survey-progress-fill" style="width:0%"></div></div>
+    </div>
+    <button class="btn-primary" id="survey-submit-btn" onclick="submitSurvey()" disabled>
+      <i class="ti ti-send"></i> Enviar avaliação
+    </button>
+  </div>`;
+
+  el.innerHTML = html;
+  surveyAnswers = {};
+}
+
+function updateSurveyProgress() {
+  const likertQs = SURVEY_QUESTIONS.filter(q => q.section !== 'Aberta');
+  const answered = likertQs.filter(q => surveyAnswers[q.id]).length;
+  const pct = Math.round((answered / likertQs.length) * 100);
+  const fill = document.getElementById('survey-progress-fill');
+  const label = document.getElementById('survey-step-label');
+  const btn = document.getElementById('survey-submit-btn');
+  if (fill) fill.style.width = pct + '%';
+  if (label) label.textContent = `${answered} de ${likertQs.length} itens Likert respondidos`;
+  if (btn) btn.disabled = (answered < likertQs.length);
+}
+
+function submitSurvey() {
+  const likertQs = SURVEY_QUESTIONS.filter(q => q.section !== 'Aberta');
+  const scores = likertQs.map(q => parseInt(surveyAnswers[q.id] || 0));
+  const avg = (scores.reduce((a,b) => a+b, 0) / scores.length).toFixed(2);
+
+  // Calcular médias por dimensão
+  const dims = {};
+  likertQs.forEach(q => {
+    if (!dims[q.section]) dims[q.section] = [];
+    dims[q.section].push(parseInt(surveyAnswers[q.id] || 0));
+  });
+  const dimSummary = Object.entries(dims).map(([k,v]) =>
+    `${k}: ${(v.reduce((a,b)=>a+b,0)/v.length).toFixed(2)}`
+  ).join(' · ');
+
+  // Montar texto para copiar / exportar
+  const rows = SURVEY_QUESTIONS.map(q => `${q.id}\t${q.section}\t${q.text}\t${surveyAnswers[q.id]||''}`).join('\n');
+  const exportText = `ENADEBOT — Avaliação Likert (${new Date().toLocaleDateString('pt-BR')})\n` +
+    `Média geral: ${avg}/5 | ${dimSummary}\n\n` +
+    `ID\tDimensão\tQuestão\tResposta\n${rows}`;
+
+  const el = document.getElementById('survey-content');
+  el.innerHTML = `<div class="survey-thankyou">
+    <i class="ti ti-circle-check"></i>
+    <h2>Obrigado pela avaliação!</h2>
+    <p>Suas respostas foram registradas e contribuem diretamente para a pesquisa sobre o ENADEBOT.<br>
+    <strong>Média geral: ${avg} / 5</strong><br><span style="font-size:11px;color:var(--text3)">${dimSummary}</span></p>
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;text-align:left;margin-bottom:20px">
+      <div style="font-size:9px;font-family:var(--mono);color:var(--text3);margin-bottom:8px;letter-spacing:.08em;text-transform:uppercase">Exportar respostas (cole em planilha)</div>
+      <textarea readonly style="width:100%;font-size:11px;font-family:var(--mono);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px;resize:vertical;min-height:120px;color:var(--text2);outline:none">${exportText}</textarea>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="btn-primary" onclick="copyExport(\`${exportText.replace(/`/g,"'")}\`)"><i class="ti ti-copy"></i> Copiar respostas</button>
+      <button class="btn-ghost" onclick="initSurvey()"><i class="ti ti-refresh"></i> Responder novamente</button>
+      <button class="btn-ghost" onclick="navigate('home')"><i class="ti ti-home"></i> Início</button>
+    </div>
+  </div>`;
+}
+
+function copyExport(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Respostas copiadas! Cole em uma planilha (Excel/Sheets) para análise.');
+  }).catch(() => {
+    alert('Selecione o texto na caixa acima e copie manualmente (Ctrl+C / Cmd+C).');
+  });
 }
 
 function showScreen(id) {
@@ -1028,21 +1275,7 @@ function autoGrow(el) {
 }
 
 // ── API KEY (OpenRouter — gratuito) ──────────────────────────────────────────
-function saveKey(val) {
-  const clean = val.trim();
-  sessionStorage.setItem('enadebot_key', clean);
-  const status = document.getElementById('api-key-status');
-  if (clean.startsWith('sk-or-')) {
-    status.textContent = '✓ chave salva';
-    status.style.color = 'var(--green)';
-  } else if (clean.length > 10) {
-    status.textContent = '⚠ deve começar com sk-or-';
-    status.style.color = 'var(--yellow)';
-  } else {
-    status.textContent = 'sem chave';
-    status.style.color = 'var(--text3)';
-  }
-}
+// saveKey() está definida acima junto com as funções de sidebar mobile.
 
 function getKey() {
   return sessionStorage.getItem('enadebot_key') || '';
